@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +8,7 @@
     <link rel="stylesheet" href="/css/font_awesome6.all.min.css">
     <style>
         :root {
-            --primary-color: #c33;
+            --primary-color: #A31F24;
             --tag-color: #1890ff;
         }
 
@@ -20,7 +21,7 @@
         .navbar {
             padding: 12px 24px;
             background: #fff;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
             display: flex;
             align-items: center;
             gap: 20px;
@@ -30,19 +31,6 @@
             margin: 0;
             font-size: 24px;
             color: var(--primary-color);
-        }
-
-        .search-box {
-            flex: 1;
-            max-width: 400px;
-            position: relative;
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 8px 36px 8px 16px;
-            border: 1px solid #dee2e6;
-            border-radius: 20px;
         }
 
         .poem-container {
@@ -97,22 +85,43 @@
             border-color: var(--tag-color);
         }
 
+        .version-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: auto;
+        }
+
+        .toggle-icon {
+            cursor: pointer;
+            color: var(--primary-color);
+            font-size: 24px;
+            transition: transform 0.3s;
+        }
+
+        .toggle-icon.active {
+            color: var(--tag-color);
+        }
+
         .poem-preview {
-            color: #495057;
             line-height: 1.6;
+            color: #495057;
             display: -webkit-box;
-            -webkit-line-clamp: 3;
             -webkit-box-orient: vertical;
             overflow: hidden;
+            max-height: calc(3 * 1.6em);
+            /* 根据行高动态计算 */
         }
     </style>
 </head>
+
 <body>
     <nav class="navbar">
         <h1>古诗文</h1>
-        <div class="search-box">
-            <input type="text" class="search-input" placeholder="搜索诗词、作者或标签...">
-            <i class="fas fa-search" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: #6c757d;"></i>
+        <!-- 添加切换按钮 -->
+        <div class="version-toggle">
+            <span>高中版</span>
+            <i id="versionSwitch" class="fas fa-toggle-on toggle-icon"></i>
         </div>
     </nav>
 
@@ -120,48 +129,58 @@
     <script>
         let currentVersion = 'senior';
 
+        // 动态计算显示行数
+        function adjustPreviewHeight(card) {
+            const preview = card.querySelector('.poem-preview');
+            const lineHeight = parseInt(getComputedStyle(preview).lineHeight);
+            const maxHeight = card.clientHeight - 120; // 减去标题和元数据的高度
+
+            const availableLines = Math.floor(maxHeight / lineHeight);
+            preview.style.webkitLineClamp = Math.max(1, availableLines);
+        }
+
         async function loadPoems(version) {
             try {
                 const response = await fetch(`/poem/${version}`);
-                if (!response.ok) throw new Error('网络响应异常');
                 const poems = await response.json();
 
-                document.getElementById('poemContainer').innerHTML = poems.map(poem => `
+                const container = document.getElementById('poemContainer');
+                container.innerHTML = poems.map(poem => `
                     <div class="poem-card">
                         <div class="tag-container">
                             ${poem.tags.map(tag => `
-                                <div class="tag ${tag.includes('必修') ? 'tag-required' : 'tag-literary'}">${tag}</div>
+                                <div class="tag ${tag.includes('必修') ? 'tag-required' : 'tag-literary'}">
+                                    ${tag}
+                                </div>
                             `).join('')}
                         </div>
                         <h2 class="poem-title">${poem.title}</h2>
                         <div class="poem-meta">【${poem.dynasty}】${poem.author}</div>
-                        <div class="poem-preview">${poem.content[0]?.line || ''}</div>
+                        <div class="poem-preview">${poem.content.map(c => c.line).join('')}</div>
                     </div>
                 `).join('');
+
+                // 动态调整每张卡片的内容显示
+                container.querySelectorAll('.poem-card').forEach(adjustPreviewHeight);
             } catch (error) {
-                console.error('数据加载失败:', error);
-                document.getElementById('poemContainer').innerHTML =
-                    `<div class="error-message">加载失败，请稍后重试</div>`;
+                console.error('加载失败:', error);
             }
         }
+
+        // 切换版本事件
+        document.getElementById('versionSwitch').addEventListener('click', async () => {
+            currentVersion = currentVersion === 'senior' ? 'junior' : 'senior';
+            const toggle = document.getElementById('versionSwitch');
+
+            toggle.classList.toggle('fa-toggle-on');
+            toggle.classList.toggle('fa-toggle-off');
+            toggle.parentNode.querySelector('span').textContent = currentVersion === 'senior' ? '高中版' : '初中版';
+
+            await loadPoems(currentVersion);
+        });
 
         // 初始化加载
-        try {
-            loadPoems(currentVersion);
-        } catch (initError) {
-            console.error('初始化异常:', initError);
-        }
-
-        document.getElementById('toggle-btn').addEventListener('click', async () => {
-            try {
-                currentVersion = currentVersion === 'senior' ? 'junior' : 'senior';
-                await loadPoems(currentVersion);
-                document.getElementById('toggle-btn').className =
-                    currentVersion === 'senior' ? 'fas fa-toggle-on' : 'fas fa-toggle-off';
-            } catch (toggleError) {
-                console.error('版本切换失败:', toggleError);
-            }
-        });
+        loadPoems(currentVersion);
     </script>
 </body>
 
