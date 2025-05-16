@@ -3,38 +3,166 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>古诗文合集</title>
+    <title>古诗文</title>
     <link rel="stylesheet" href="/css/font_awesome6.all.min.css">
-    <script type="module" src="/toggle.js"></script>
     <style>
+        :root {
+            --primary-color: #c33;
+            --tag-color: #1890ff;
+        }
+
         body {
-            font-family: Arial, sans-serif;
+            font-family: "思源宋体", SimSun, serif;
+            background: #f8f9fa;
             margin: 0;
-            padding: 0;
         }
-        header {
-            background-color: #f4f4f4;
-            padding: 10px 20px;
-            text-align: center;
-            border-bottom: 1px solid #ddd;
+
+        .navbar {
+            padding: 12px 24px;
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 20px;
         }
-        #toggle-btn {
-            cursor: pointer;
+
+        .navbar h1 {
+            margin: 0;
+            font-size: 24px;
+            color: var(--primary-color);
+        }
+
+        .search-box {
+            flex: 1;
+            max-width: 400px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 8px 36px 8px 16px;
+            border: 1px solid #dee2e6;
+            border-radius: 20px;
+        }
+
+        .poem-container {
+            padding: 24px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .poem-card {
+            background: #fff;
+            border: 1px solid var(--primary-color);
+            border-radius: 8px;
+            padding: 16px;
+            position: relative;
+        }
+
+        .poem-title {
+            color: var(--primary-color);
+            margin: 0 0 8px;
             font-size: 20px;
-            margin: 10px;
         }
-        main {
-            padding: 20px;
+
+        .poem-meta {
+            color: #6c757d;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        .tag-container {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            display: flex;
+            gap: 6px;
+        }
+
+        .tag {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            border: 1px solid;
+        }
+
+        .tag-required {
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .tag-literary {
+            color: var(--tag-color);
+            border-color: var(--tag-color);
+        }
+
+        .poem-preview {
+            color: #495057;
+            line-height: 1.6;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>古诗文合集</h1>
-        <i id="toggle-btn" class="fas fa-toggle-on"></i>
-    </header>
-    <main id="app">
-        <!-- 内容将由 toggle.js 动态加载 -->
-    </main>
+    <nav class="navbar">
+        <h1>古诗文</h1>
+        <div class="search-box">
+            <input type="text" class="search-input" placeholder="搜索诗词、作者或标签...">
+            <i class="fas fa-search" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: #6c757d;"></i>
+        </div>
+    </nav>
+
+    <div class="poem-container" id="poemContainer"></div>
+    <script>
+        let currentVersion = 'senior';
+
+        async function loadPoems(version) {
+            try {
+                const response = await fetch(`/poem/${version}`);
+                if (!response.ok) throw new Error('网络响应异常');
+                const poems = await response.json();
+
+                document.getElementById('poemContainer').innerHTML = poems.map(poem => `
+                    <div class="poem-card">
+                        <div class="tag-container">
+                            ${poem.tags.map(tag => `
+                                <div class="tag ${tag.includes('必修') ? 'tag-required' : 'tag-literary'}">${tag}</div>
+                            `).join('')}
+                        </div>
+                        <h2 class="poem-title">${poem.title}</h2>
+                        <div class="poem-meta">【${poem.dynasty}】${poem.author}</div>
+                        <div class="poem-preview">${poem.content[0]?.line || ''}</div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('数据加载失败:', error);
+                document.getElementById('poemContainer').innerHTML =
+                    `<div class="error-message">加载失败，请稍后重试</div>`;
+            }
+        }
+
+        // 初始化加载
+        try {
+            loadPoems(currentVersion);
+        } catch (initError) {
+            console.error('初始化异常:', initError);
+        }
+
+        document.getElementById('toggle-btn').addEventListener('click', async () => {
+            try {
+                currentVersion = currentVersion === 'senior' ? 'junior' : 'senior';
+                await loadPoems(currentVersion);
+                document.getElementById('toggle-btn').className =
+                    currentVersion === 'senior' ? 'fas fa-toggle-on' : 'fas fa-toggle-off';
+            } catch (toggleError) {
+                console.error('版本切换失败:', toggleError);
+            }
+        });
+    </script>
 </body>
+
 </html>
