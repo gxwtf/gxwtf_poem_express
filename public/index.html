@@ -52,6 +52,29 @@
             color: var(--primary-color);
             margin: 0 0 8px;
             font-size: 20px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+            position: relative;
+        }
+
+        .poem-title:hover::after {
+            content: attr(data-title);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 14px;
+            white-space: normal;
+            width: max-content;
+            max-width: 300px;
+            z-index: 10;
+            pointer-events: none;
         }
 
         .poem-meta {
@@ -61,11 +84,11 @@
         }
 
         .tag-container {
-            position: absolute;
-            top: 16px;
-            right: 16px;
             display: flex;
             gap: 6px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+            position: static;
         }
 
         .tag {
@@ -147,6 +170,9 @@
                 const container = document.getElementById('poemContainer');
                 container.innerHTML = poems.map(poem => `
                     <div class="poem-card" onclick="location.href='/${encodeURIComponent(poem.title)}'" style="cursor: pointer;">
+                        <h2 class="poem-title" data-title="${poem.title}">${poem.title}</h2>
+                        <div class="poem-meta">【${poem.dynasty}】${poem.author}</div>
+                        <div class="poem-preview">${poem.content.map(c => c.line).join('')}</div>
                         <div class="tag-container">
                             ${poem.tags.map(tag => `
                                 <div class="tag ${tag.includes('必修') ? 'tag-required' : 'tag-literary'}">
@@ -154,9 +180,6 @@
                                 </div>
                             `).join('')}
                         </div>
-                        <h2 class="poem-title">${poem.title}</h2>
-                        <div class="poem-meta">【${poem.dynasty}】${poem.author}</div>
-                        <div class="poem-preview">${poem.content.map(c => c.line).join('')}</div>
                     </div>
                 `).join('');
 

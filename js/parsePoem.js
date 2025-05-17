@@ -20,41 +20,47 @@ function convertToFullWidth(text) {
 
 // 解析单个文件
 function parseFile(filePath) {
-    const content = fs.readFileSync(filePath, 'utf-8');
-    const lines = content.split('\n').map(line => line.trim());
+    try {
+        const content = fs.readFileSync(filePath, 'utf-8');
+        const lines = content.split('\n').map(line => line.trim());
 
-    const title = lines[0];
-    const [dynasty, author] = lines[1].match(/【(.*?)】(.*)/).slice(1, 3);
-    const tagsLine = lines[2];
-    const tags = tagsLine.startsWith('tags:') ? tagsLine.slice(5).split(',') : [];
+        const title = lines[0];
+        const [dynasty, author] = lines[1].match(/【(.*?)】(.*)/).slice(1, 3);
+        const tagsLine = lines[2];
+        const tags = tagsLine.startsWith('tags:') ? tagsLine.slice(5).split(',') : [];
 
-    // 提取 display 属性
-    const displayLine = lines[3];
-    const display = displayLine.startsWith('display:') ? displayLine.slice(8).trim() : undefined;
+        // 提取 display 属性
+        const displayLine = lines[3];
+        const display = displayLine.startsWith('display:') ? displayLine.slice(8).trim() : undefined;
 
-    const poemStartIndex = lines.indexOf('', 4) + 1;
-    const emptyLineIndex = lines.indexOf('', poemStartIndex);
+        const poemStartIndex = lines.indexOf('', 4) + 1;
+        const emptyLineIndex = lines.indexOf('', poemStartIndex);
 
-    const poemLines = lines.slice(poemStartIndex, emptyLineIndex).filter(line => line);
-    const transLines = lines.slice(emptyLineIndex + 1).filter(line => line);
+        const poemLines = lines.slice(poemStartIndex, emptyLineIndex).filter(line => line);
+        const transLines = lines.slice(emptyLineIndex + 1).filter(line => line);
 
-    // 解析每行的 display 信息
-    const parsedContent = poemLines.map((line, index) => {
-        const match = line.match(/^(.*?):(.*)$/); // 检查是否有 display 前缀
-        if (match) {
+        // 解析每行的 display 信息
+        const parsedContent = poemLines.map((line, index) => {
+            const match = line.match(/^(.*?):(.*)$/); // 检查是否有 display 前缀
+            if (match) {
+                return {
+                    display: match[1].trim(),
+                    line: convertToFullWidth(match[2].trim().replace(/"/g, '\\"')),
+                    trans: convertToFullWidth((transLines[index] || '').replace(/"/g, '\\"'))
+                };
+            }
             return {
-                display: match[1].trim(),
-                line: convertToFullWidth(match[2].trim().replace(/"/g, '\\"')),
+                line: convertToFullWidth(line.replace(/"/g, '\\"')),
                 trans: convertToFullWidth((transLines[index] || '').replace(/"/g, '\\"'))
             };
-        }
-        return {
-            line: convertToFullWidth(line.replace(/"/g, '\\"')),
-            trans: convertToFullWidth((transLines[index] || '').replace(/"/g, '\\"'))
-        };
-    });
+        });
 
-    return { title, dynasty, author, tags, display, content: parsedContent };
+        return { title, dynasty, author, tags, display, content: parsedContent };
+    } catch (err) {
+        console.error(`解析文件失败: ${filePath}\n错误信息: ${err.message}`);
+        // 抛出一个带文件路径信息的错误，供上层捕获
+        throw new Error(`解析文件失败: ${filePath}`);
+    }
 }
 
 // 主解析函数
@@ -68,12 +74,29 @@ async function parsePoem() {
 
     for (const subDir of subDirs) {
         const subDirPath = path.join(srcDir, subDir);
-        const files = fs.readdirSync(subDirPath).filter(file => file.endsWith('.txt'));
+        const files = fs
+            .readdirSync(subDirPath)
+            .filter(file => file.endsWith('.txt'))
+            .sort((a, b) => {
+                // 提取文件名前面的连续数字；没有数字时返回 Infinity 保证排在后面
+                const numA = parseInt(a.match(/^\d+/)?.[0] || '', 10);
+                const numB = parseInt(b.match(/^\d+/)?.[0] || '', 10);
+                if (isNaN(numA) && isNaN(numB)) return a.localeCompare(b, 'zh-CN'); // 都没数字，按字典序
+                if (isNaN(numA)) return 1;
+                if (isNaN(numB)) return -1;
+                return numA - numB; // 按数字升序
+            });
 
-        const poems = files.map(file => {
+        const poems = [];
+        for (const file of files) {
             const filePath = path.join(subDirPath, file);
-            return parseFile(filePath);
-        });
+            try {
+                poems.push(parseFile(filePath));
+            } catch (err) {
+                // 已在 parseFile 中打印错误，这里继续下一个文件
+                continue;
+            }
+        }
 
         allPoems.push(...poems);
 
@@ -83,10 +106,14 @@ async function parsePoem() {
  */
 const poems = ${JSON.stringify(poems, null, 4)};
 export default poems;
-        `.trim();
+    `.trim();
 
         const destPath = path.join(destDir, `${subDir}.js`);
         fs.writeFileSync(destPath, jsContent, 'utf-8');
+    }
+
+    if (allPoems.length === 0) {
+        console.warn('警告: 没有成功解析任何诗词，请检查源文件格式。');
     }
 
     const allJsContent = `
