@@ -4,11 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>作者详情</title>
+    <title></title>
     <link rel="stylesheet" href="/css/font_awesome6.all.min.css">
     <style>
         :root {
             --primary-color: #A31F24;
+            --secondary-color: #6c757d;
         }
 
         body {
@@ -22,73 +23,178 @@
             max-width: 800px;
             margin: 0 auto;
             background: #fff;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
         }
 
-        .author-name {
-            font-size: 24px;
-            color: var(--primary-color);
-            margin-bottom: 10px;
+        .author-header {
             text-align: center;
+            margin-bottom: 30px;
         }
 
         .author-image {
-            display: block;
-            max-width: 150px;
-            margin: 0 auto 20px;
+            width: 160px;
+            height: 160px;
+            object-fit: cover;
             border-radius: 50%;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border: 4px solid var(--primary-color);
+            box-shadow: 0 4px 15px rgba(163, 31, 36, 0.2);
+            margin-bottom: 20px;
+        }
+
+        .author-name {
+            font-size: 28px;
+            color: var(--primary-color);
+            margin: 15px 0;
+            letter-spacing: 1px;
         }
 
         .author-intro {
             line-height: 1.8;
-            color: #495057;
+            color: var(--secondary-color);
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .author-intro::before {
+            content: "“";
+            font-size: 48px;
+            color: var(--primary-color);
+            position: absolute;
+            left: 10px;
+            top: -10px;
+        }
+
+        .works-section {
+            margin: 30px 0;
+        }
+
+        .section-title {
+            font-size: 20px;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 8px;
             margin-bottom: 20px;
+            display: inline-block;
+        }
+
+        .works-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 15px;
+        }
+
+        .poem-card {
+            padding: 15px;
+            border-radius: 6px;
+            background: #fff;
+            border: 1px solid #eee;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: var(--secondary-color);
+        }
+
+        .poem-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
         }
 
         .back-button {
-            display: inline-block;
-            margin-top: 20px;
-            color: var(--primary-color);
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: var(--primary-color);
+            color: white !important;
             text-decoration: none;
-            font-size: 14px;
+            transition: all 0.3s ease;
+            margin-top: 20px;
         }
 
         .back-button i {
-            margin-right: 5px;
+            margin-right: 8px;
+        }
+
+        .back-button:hover {
+            background: #8a1a1f;
+            transform: translateX(-3px);
+        }
+
+        .loading {
+            text-align: center;
+            color: var(--secondary-color);
+            padding: 20px;
         }
     </style>
 </head>
 
 <body>
     <div class="author-container">
-        <h1 class="author-name" id="authorName"></h1>
-        <img id="authorImage" class="author-image" alt="作者头像">
-        <p class="author-intro" id="authorIntro"></p>
-        <p class="author-intro" id="authorDetailIntro"></p>
         <a href="/" class="back-button">
             <i class="fa-solid fa-arrow-left"></i>
             返回首页
         </a>
+        
+        <div class="author-header">
+            <img id="authorImage" class="author-image" alt="作者头像">
+            <h1 class="author-name" id="authorName"></h1>
+        </div>
+
+        <div class="author-intro" id="authorIntro"></div>
+
+        <div class="works-section">
+            <h2 class="section-title">课内作品</h2>
+            <div class="works-grid" id="worksGrid"></div>
+        </div>
     </div>
 
     <script>
         async function loadAuthor() {
             const name = decodeURIComponent(location.pathname.split('/').pop());
             try {
-                const response = await fetch(`/author?name=${name}`);
-                if (!response.ok) throw new Error('未找到该作者的信息');
-                const author = await response.json();
+                // 加载作者信息
+                const authorRes = await fetch(`/author?name=${name}`);
+                if (!authorRes.ok) throw new Error('作者信息加载失败');
+                const author = await authorRes.json();
 
-                document.title = author.name;
+                // 设置页面信息
+                document.title = `${author.name} - 诗人详情`;
                 document.getElementById('authorName').textContent = author.name;
                 document.getElementById('authorImage').src = author.image;
                 document.getElementById('authorIntro').textContent = author.intro;
+
+                // 加载作品列表
+                const worksRes = await fetch(`/poem?author=${encodeURIComponent(name)}`);
+                if (!worksRes.ok) throw new Error('作品加载失败');
+                const works = await worksRes.json();
+
+                const worksGrid = document.getElementById('worksGrid');
+                if (works.length > 0) {
+                    worksGrid.innerHTML = works.map(poem => `
+                        <a href="/${encodeURIComponent(poem.title)}" class="poem-card">
+                            ${poem.title}
+                        </a>
+                    `).join('');
+                } else {
+                    worksGrid.innerHTML = `<div class="loading">暂无收录作品</div>`;
+                }
             } catch (error) {
-                document.body.innerHTML = '<h1>加载失败</h1>';
+                document.body.innerHTML = `
+                    <div class="author-container">
+                        <div class="loading">数据加载失败，请稍后再试</div>
+                        <a href="/" class="back-button">
+                            <i class="fa-solid fa-arrow-left"></i>
+                            返回首页
+                        </a>
+                    </div>
+                `;
                 console.error(error);
             }
         }

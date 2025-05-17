@@ -17,15 +17,27 @@ router.get('/junior', (req, res) => {
     res.json(juniorPoems);
 });
 
-// 根据标题返回古诗文详情
+// 根据标题或作者返回古诗文详情
 router.get('/', (req, res) => {
     const title = req.query.title;
-    const poem = allPoems.find(p => p.title === title);
+    const author = req.query.author;
 
-    if (poem) {
-        res.json(poem);
+    if (title) {
+        const poem = allPoems.find(p => p.title === title);
+        if (poem) {
+            res.json(poem);
+        } else {
+            res.status(404).send('未找到对应的古诗文');
+        }
+    } else if (author) {
+        const poemsByAuthor = allPoems.filter(p => p.author === author);
+        if (poemsByAuthor.length > 0) {
+            res.json(poemsByAuthor);
+        } else {
+            res.status(404).send('未找到该作者的作品');
+        }
     } else {
-        res.status(404).send('未找到对应的古诗文');
+        res.status(400).send('请提供标题或作者名');
     }
 });
 
