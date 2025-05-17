@@ -26,24 +26,39 @@ function parseFile(filePath) {
     const title = lines[0];
     const [dynasty, author] = lines[1].match(/【(.*?)】(.*)/).slice(1, 3);
     const tagsLine = lines[2];
-    const tags = tagsLine.startsWith('Tags:') ? tagsLine.slice(5).split(',') : [];
+    const tags = tagsLine.startsWith('tags:') ? tagsLine.slice(5).split(',') : [];
 
-    const poemStartIndex = lines.indexOf('', 3) + 1;
+    // 提取 display 属性
+    const displayLine = lines[3];
+    const display = displayLine.startsWith('display:') ? displayLine.slice(8).trim() : undefined;
+
+    const poemStartIndex = lines.indexOf('', 4) + 1;
     const emptyLineIndex = lines.indexOf('', poemStartIndex);
 
     const poemLines = lines.slice(poemStartIndex, emptyLineIndex).filter(line => line);
     const transLines = lines.slice(emptyLineIndex + 1).filter(line => line);
 
-    const parsedContent = poemLines.map((line, index) => ({
-        line: convertToFullWidth(line.replace(/"/g, '\\"')),
-        trans: convertToFullWidth((transLines[index] || '').replace(/"/g, '\\"'))
-    }));
+    // 解析每行的 display 信息
+    const parsedContent = poemLines.map((line, index) => {
+        const match = line.match(/^(.*?):(.*)$/); // 检查是否有 display 前缀
+        if (match) {
+            return {
+                display: match[1].trim(),
+                line: convertToFullWidth(match[2].trim().replace(/"/g, '\\"')),
+                trans: convertToFullWidth((transLines[index] || '').replace(/"/g, '\\"'))
+            };
+        }
+        return {
+            line: convertToFullWidth(line.replace(/"/g, '\\"')),
+            trans: convertToFullWidth((transLines[index] || '').replace(/"/g, '\\"'))
+        };
+    });
 
-    return { title, dynasty, author, tags, content: parsedContent };
+    return { title, dynasty, author, tags, display, content: parsedContent };
 }
 
 // 主解析函数
-function parsePoem() {
+async function parsePoem() {
     const subDirs = fs.readdirSync(srcDir).filter(subDir => {
         const subDirPath = path.join(srcDir, subDir);
         return fs.statSync(subDirPath).isDirectory();
@@ -51,7 +66,7 @@ function parsePoem() {
 
     const allPoems = [];
 
-    subDirs.forEach(subDir => {
+    for (const subDir of subDirs) {
         const subDirPath = path.join(srcDir, subDir);
         const files = fs.readdirSync(subDirPath).filter(file => file.endsWith('.txt'));
 
@@ -72,7 +87,7 @@ export default poems;
 
         const destPath = path.join(destDir, `${subDir}.js`);
         fs.writeFileSync(destPath, jsContent, 'utf-8');
-    });
+    }
 
     const allJsContent = `
 /**

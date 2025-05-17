@@ -8,8 +8,9 @@ const poems = [
         "author": "毛泽东",
         "tags": [
             "必修一",
-            "毛泽东诗词"
+            "词"
         ],
+        "display": "center",
         "content": [
             {
                 "line": "独立寒秋，湘江北去，橘子洲头。",

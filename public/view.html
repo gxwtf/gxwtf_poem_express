@@ -38,6 +38,19 @@
             text-align: center;
         }
 
+        .text-center {
+            text-align: center !important;
+            text-indent: 0 !important;
+        }
+
+        .text-left {
+            text-indent: 2em;
+        }
+
+        .line-container {
+            margin: 12px 0;
+        }
+
         .translation-toggle {
             background: #A31F24;
             color: white;
@@ -66,7 +79,6 @@
         .translated-line {
             color: #6c757d;
             font-size: 0.9em;
-            margin-left: 2em;
             display: none;
         }
 
@@ -92,18 +104,21 @@
                 if (!response.ok) throw new Error('未找到对应的古诗文');
                 const poem = await response.json();
 
-                // 设置页面标题
                 document.title = poem.title;
-                
                 document.getElementById('poemTitle').textContent = poem.title;
                 document.getElementById('poemMeta').textContent = `【${poem.dynasty}】${poem.author}`;
-                
-                // 生成带翻译的完整内容
-                const contentHTML = poem.content.map(c => `
-                    <div class="original-line">${c.line}</div>
-                    <div class="translated-line">${c.trans}</div>
-                `).join('');
-                
+
+                // 生成带样式的内容
+                const contentHTML = poem.content.map(c => {
+                    const lineStyle = c.display || poem.display;
+                    return `
+                        <div class="line-container ${lineStyle ? 'text-' + lineStyle : ''}">
+                            <div class="original-line">${c.line}</div>
+                            <div class="translated-line">${c.trans}</div>
+                        </div>
+                    `;
+                }).join('');
+
                 document.getElementById('poemContent').innerHTML = contentHTML;
             } catch (error) {
                 document.body.innerHTML = '<h1>加载失败</h1>';
@@ -115,9 +130,9 @@
             const container = document.getElementById('poemContent');
             const button = document.querySelector('.translation-toggle');
             container.classList.toggle('show-translation');
-            
-            button.textContent = container.classList.contains('show-translation') 
-                ? '隐藏翻译' 
+
+            button.textContent = container.classList.contains('show-translation')
+                ? '隐藏翻译'
                 : '显示翻译';
         }
 
