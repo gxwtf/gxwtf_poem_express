@@ -45,16 +45,47 @@
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
+        .poem-header {
+            margin-bottom: 20px;
+        }
+
         .poem-title {
             font-size: 24px;
             color: var(--primary-color);
+            margin-bottom: 8px;
             margin-bottom: 10px;
             text-align: center;
+        }
+
+        .poem-tags {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin: 12px 0;
+            flex-wrap: wrap;
+        }
+
+        .poem-tag {
+            background: rgba(163, 31, 36, 0.1);
+            color: var(--primary-color);
+            padding: 4px 12px;
+            border-radius: 14px;
+            font-size: 13px;
+            border: 1px solid rgba(163, 31, 36, 0.3);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .poem-tag:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-1px);
         }
 
         .poem-meta {
             color: #6c757d;
             font-size: 14px;
+            margin-bottom: 12px;
             margin-bottom: 20px;
             text-align: center;
         }
@@ -114,8 +145,13 @@
             <i class="fa-solid fa-arrow-left"></i>
             返回首页
         </a>
-        <h1 class="poem-title" id="poemTitle"></h1>
-        <div class="poem-meta" id="poemMeta"></div>
+
+        <div class="poem-header">
+            <h1 class="poem-title" id="poemTitle"></h1>
+            <div class="poem-meta" id="poemMeta"></div>
+            <div class="poem-tags" id="poemTags"></div>
+        </div>
+
         <button class="translation-toggle" onclick="toggleTranslation()">显示翻译</button>
         <div class="poem-content" id="poemContent"></div>
     </div>
@@ -131,21 +167,26 @@
                 document.title = poem.title;
                 document.getElementById('poemTitle').textContent = poem.title;
 
-                // 设置作者名为可点击链接
+                // 添加标签展示
+                const tagsHTML = poem.tags?.map(tag =>
+                    `<span class="poem-tag">${tag}</span>`
+                ).join('') || '';
+                document.getElementById('poemTags').innerHTML = tagsHTML;
+
+                // 设置作者链接
                 document.getElementById('poemMeta').innerHTML = `
-                    【${poem.dynasty}】<a href="/author/${encodeURIComponent(poem.author)}" class="author-link">${poem.author}</a>
+                    【${poem.dynasty}】<a href="/author/${encodeURIComponent(poem.author)}" 
+                     style="color: var(--primary-color);text-decoration: none;">
+                     ${poem.author}</a>
                 `;
 
-                // 生成带样式的内容
-                const contentHTML = poem.content.map(c => {
-                    const lineStyle = c.display || poem.display;
-                    return `
-                        <div class="line-container ${lineStyle ? 'text-' + lineStyle : ''}">
-                            <div class="original-line">${c.line}</div>
-                            <div class="translated-line">${c.trans}</div>
-                        </div>
-                    `;
-                }).join('');
+                // 生成内容
+                const contentHTML = poem.content.map(c => `
+                    <div class="line-container ${c.display || poem.display ? 'text-' + (c.display || poem.display) : ''}">
+                        <div class="original-line">${c.line}</div>
+                        <div class="translated-line">${c.trans}</div>
+                    </div>
+                `).join('');
 
                 document.getElementById('poemContent').innerHTML = contentHTML;
             } catch (error) {

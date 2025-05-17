@@ -112,7 +112,8 @@ const allPoems = [
         "author": "苏轼",
         "tags": [
             "必修一",
-            "文言文"
+            "文言文",
+            "背默"
         ],
         "display": "left",
         "content": [
@@ -144,7 +145,8 @@ const allPoems = [
         "author": "白居易",
         "tags": [
             "必修一",
-            "诗"
+            "诗",
+            "背默"
         ],
         "display": "center",
         "content": [
