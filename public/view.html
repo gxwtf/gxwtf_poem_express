@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>古诗文详情</title>
+    <link rel="stylesheet" href="/css/font_awesome6.all.min.css">
+    <style>
+        body {
+            font-family: "思源宋体", SimSun, serif;
+            background: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .poem-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .poem-title {
+            font-size: 24px;
+            color: #A31F24;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .poem-meta {
+            color: #6c757d;
+            font-size: 14px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .translation-toggle {
+            background: #A31F24;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 10px 0 20px;
+            width: 100%;
+            transition: background 0.3s;
+        }
+
+        .translation-toggle:hover {
+            background: #8a1a1f;
+        }
+
+        .poem-content {
+            line-height: 1.8;
+        }
+
+        .original-line {
+            margin: 12px 0;
+            color: #212529;
+        }
+
+        .translated-line {
+            color: #6c757d;
+            font-size: 0.9em;
+            margin-left: 2em;
+            display: none;
+        }
+
+        .show-translation .translated-line {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="poem-container">
+        <h1 class="poem-title" id="poemTitle"></h1>
+        <div class="poem-meta" id="poemMeta"></div>
+        <button class="translation-toggle" onclick="toggleTranslation()">显示翻译</button>
+        <div class="poem-content" id="poemContent"></div>
+    </div>
+
+    <script>
+        async function loadPoem() {
+            const title = decodeURIComponent(location.pathname.slice(1));
+            try {
+                const response = await fetch(`/poem?title=${title}`);
+                if (!response.ok) throw new Error('未找到对应的古诗文');
+                const poem = await response.json();
+
+                // 设置页面标题
+                document.title = poem.title;
+                
+                document.getElementById('poemTitle').textContent = poem.title;
+                document.getElementById('poemMeta').textContent = `【${poem.dynasty}】${poem.author}`;
+                
+                // 生成带翻译的完整内容
+                const contentHTML = poem.content.map(c => `
+                    <div class="original-line">${c.line}</div>
+                    <div class="translated-line">${c.trans}</div>
+                `).join('');
+                
+                document.getElementById('poemContent').innerHTML = contentHTML;
+            } catch (error) {
+                document.body.innerHTML = '<h1>加载失败</h1>';
+                console.error(error);
+            }
+        }
+
+        function toggleTranslation() {
+            const container = document.getElementById('poemContent');
+            const button = document.querySelector('.translation-toggle');
+            container.classList.toggle('show-translation');
+            
+            button.textContent = container.classList.contains('show-translation') 
+                ? '隐藏翻译' 
+                : '显示翻译';
+        }
+
+        loadPoem();
+    </script>
+</body>
+
+</html>
