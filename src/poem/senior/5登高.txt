@@ -1,6 +1,6 @@
 登高
 【唐】杜甫
-tags:必修一
+tags:必修上
 display:center
 
 风急天高猿啸哀，渚清沙白鸟飞回。

@@ -1,0 +1,41 @@
+:root {
+    --primary-color: #A31F24;
+    --tag-color: #1890ff;
+}
+
+body {
+    font-family: "思源宋体", SimSun, serif;
+    background: #f8f9fa;
+    margin: 0;
+}
+
+.navbar {
+    padding: 12px 24px;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.navbar-title {
+    margin: 0;
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.version-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+}
+
+.toggle-icon {
+    cursor: pointer;
+    color: var(--primary-color);
+    font-size: 24px;
+    transition: transform 0.3s;
+}

@@ -6,19 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title></title>
     <link rel="stylesheet" href="/css/font_awesome6.all.min.css">
+    <link rel="stylesheet" href="/css/basic.css">
+    <script src="/js/navbar.js"></script>
+    <script src="/js/backButton.js" defer></script>
     <style>
-        :root {
-            --primary-color: #A31F24;
-            --tag-color: #1890ff;
-        }
-
-        body {
-            font-family: "思源宋体", SimSun, serif;
-            background: #f8f9fa;
-            margin: 0;
-            padding: 20px;
-        }
-
         .back-button {
             position: absolute;
             top: 15px;
@@ -37,7 +28,7 @@
         .poem-container {
             position: relative;
             max-width: 800px;
-            margin: 0 auto;
+            margin: 20px auto;
             background: #fff;
             border: 1px solid #ddd;
             border-radius: 8px;
@@ -140,10 +131,11 @@
 </head>
 
 <body>
+    <div id="navbar-container"></div>
     <div class="poem-container">
-        <a href="/" class="back-button">
+        <a href="#" class="back-button">
             <i class="fa-solid fa-arrow-left"></i>
-            返回首页
+            返回
         </a>
 
         <div class="poem-header">
@@ -162,7 +154,8 @@
             try {
                 const response = await fetch(`/poem?title=${title}`);
                 if (!response.ok) throw new Error('未找到对应的古诗文');
-                const poem = await response.json();
+                let poem = await response.json();
+                poem = poem[0];
 
                 document.title = poem.title;
                 document.getElementById('poemTitle').textContent = poem.title;
