@@ -7,7 +7,7 @@ const poems = [
         "dynasty": "现代",
         "author": "毛泽东",
         "tags": [
-            "必修一",
+            "必修上",
             "词"
         ],
         "display": "center",

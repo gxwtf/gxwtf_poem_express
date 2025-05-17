@@ -34,6 +34,7 @@
         }
 
         .poem-container {
+            padding-top: 16px;
             padding: 24px;
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -135,6 +136,84 @@
             max-height: calc(3 * 1.6em);
             /* 根据行高动态计算 */
         }
+
+        .search-section {
+            padding: 20px 24px;
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-container {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 48px 12px 16px;
+            border: 2px solid var(--primary-color);
+            border-radius: 30px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            box-shadow: 0 0 8px rgba(163, 31, 36, 0.3);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary-color);
+            font-size: 20px;
+        }
+
+        .filter-tags {
+            margin-top: 16px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 8px;
+        }
+
+        .filter-title {
+            color: var(--primary-color);
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .tag-btn {
+            padding: 6px 12px;
+            border-radius: 16px;
+            border: 1px solid #ddd;
+            background: #fff;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+            margin: 4px;
+        }
+
+        .tag-btn.active {
+            border-color: var(--primary-color);
+            background: rgba(163, 31, 36, 0.1);
+            color: var(--primary-color);
+        }
+
+        .selected-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
     </style>
 </head>
 
@@ -148,62 +227,161 @@
         </div>
     </nav>
 
+    <section class="search-section">
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="搜索古诗文..." id="searchInput">
+            <i class="fas fa-search search-icon"></i>
+
+            <div class="selected-tags" id="selectedTags"></div>
+
+            <div class="filter-tags">
+                <div class="filter-group">
+                    <div class="filter-title">教材</div>
+                    <div class="tag-group">
+                        <button class="tag-btn" data-type="教材" data-value="必修上">必修上</button>
+                        <button class="tag-btn" data-type="教材" data-value="必修下">必修下</button>
+                        <button class="tag-btn" data-type="教材" data-value="选必上">选必上</button>
+                        <button class="tag-btn" data-type="教材" data-value="选必中">选必中</button>
+                        <button class="tag-btn" data-type="教材" data-value="选必下">选必下</button>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <div class="filter-title">文体</div>
+                    <div class="tag-group">
+                        <button class="tag-btn" data-type="文体" data-value="诗">诗</button>
+                        <button class="tag-btn" data-type="文体" data-value="词">词</button>
+                        <button class="tag-btn" data-type="文体" data-value="曲">曲</button>
+                        <button class="tag-btn" data-type="文体" data-value="文言文">文言文</button>
+                        <button class="tag-btn" data-type="文体" data-value="戏剧">戏剧</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <div class="poem-container" id="poemContainer"></div>
     <script>
+        /* ================= 全局状态 ================= */
         let currentVersion = 'senior';
+        const currentFilters = { search: '', tags: {} }; // tags 改为对象
 
-        // 动态计算显示行数
+        /* ============ 调整预览行数 ============ */
         function adjustPreviewHeight(card) {
             const preview = card.querySelector('.poem-preview');
             const lineHeight = parseInt(getComputedStyle(preview).lineHeight);
-            const maxHeight = card.clientHeight - 120; // 减去标题和元数据的高度
-
+            const maxHeight = card.clientHeight - 120;
             const availableLines = Math.floor(maxHeight / lineHeight);
             preview.style.webkitLineClamp = Math.max(1, availableLines);
         }
 
-        async function loadPoems(version) {
-            try {
-                const response = await fetch(`/poem/${version}`);
-                const poems = await response.json();
+        /* ================= 构建查询参数 ================= */
+        function buildQueryParams() {
+            const params = new URLSearchParams();
+            params.append('version', currentVersion);
 
-                const container = document.getElementById('poemContainer');
-                container.innerHTML = poems.map(poem => `
-                    <div class="poem-card" onclick="location.href='/${encodeURIComponent(poem.title)}'" style="cursor: pointer;">
-                        <h2 class="poem-title" data-title="${poem.title}">${poem.title}</h2>
-                        <div class="poem-meta">【${poem.dynasty}】${poem.author}</div>
-                        <div class="poem-preview">${poem.content.map(c => c.line).join('')}</div>
-                        <div class="tag-container">
-                            ${poem.tags.map(tag => `
-                                <div class="tag ${tag.includes('必修') ? 'tag-required' : 'tag-literary'}">
-                                    ${tag}
-                                </div>
-                            `).join('')}
-                        </div>
+            if (currentFilters.search) {
+                params.append('search', currentFilters.search);
+            }
+
+            if (Object.keys(currentFilters.tags).length > 0) {
+                // 按类别解析标签为字符串
+                const tagsString = Object.values(currentFilters.tags)
+                    .map(group => group.join(','))
+                    .join(';');
+                params.append('tags', tagsString);
+            }
+
+            return params.toString();
+        }
+
+        /* ============== 渲染诗文卡片 ============== */
+        function renderPoems(poems) {
+            const container = document.getElementById('poemContainer');
+            container.innerHTML = poems.map(poem => `
+                <div class="poem-card" onclick="location.href='/${encodeURIComponent(poem.title)}'">
+                    <h2 class="poem-title" data-title="${poem.title}">${poem.title}</h2>
+                    <div class="poem-meta">【${poem.dynasty}】${poem.author}</div>
+                    <div class="poem-preview">${poem.content.map(c => c.line).join('')}</div>
+                    <div class="tag-container">
+                        ${poem.tags.map(tag => `
+                            <div class="tag ${tag.includes('必修') ? 'tag-required' : 'tag-literary'}">
+                                ${tag}
+                            </div>
+                        `).join('')}
                     </div>
-                `).join('');
+                </div>
+            `).join('');
 
-                // 动态调整每张卡片的内容显示
-                container.querySelectorAll('.poem-card').forEach(adjustPreviewHeight);
-            } catch (error) {
-                console.error('加载失败:', error);
+            container.querySelectorAll('.poem-card').forEach(adjustPreviewHeight);
+        }
+
+        /* ============== 标签点击事件 ============== */
+        document.querySelectorAll('.tag-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                btn.classList.toggle('active');
+
+                // 更新当前过滤器
+                const category = btn.closest('.filter-group').querySelector('.filter-title').textContent.trim();
+                if (!currentFilters.tags[category]) {
+                    currentFilters.tags[category] = [];
+                }
+
+                const value = btn.dataset.value;
+                if (btn.classList.contains('active')) {
+                    currentFilters.tags[category].push(value);
+                } else {
+                    currentFilters.tags[category] = currentFilters.tags[category].filter(tag => tag !== value);
+                    if (currentFilters.tags[category].length === 0) {
+                        delete currentFilters.tags[category];
+                    }
+                }
+
+                // 输出调试日志
+                console.log('当前过滤器标签:', currentFilters.tags);
+
+                // 更新已选标签显示
+                document.getElementById('selectedTags').innerHTML = Object.entries(currentFilters.tags)
+                    .map(([category, values]) => `
+                        <div class="filter-group">
+                            <div class="filter-title">${category}</div>
+                            ${values.map(value => `<div class="tag-btn active">${value}</div>`).join('')}
+                        </div>
+                    `).join('');
+
+                // 重新加载数据
+                loadData();
+            });
+        });
+
+        /* ============== 数据加载 ============== */
+        async function loadData() {
+            try {
+                const res = await fetch(`/poem?${buildQueryParams()}`);
+                console.log('请求参数:', buildQueryParams());
+                const poems = await res.json();
+                renderPoems(poems);
+            } catch (err) {
+                console.error('加载失败:', err);
             }
         }
 
-        // 切换版本事件
-        document.getElementById('versionSwitch').addEventListener('click', async () => {
+        /* ============== 事件监听 ============== */
+        document.getElementById('versionSwitch').addEventListener('click', () => {
             currentVersion = currentVersion === 'senior' ? 'junior' : 'senior';
-            const toggle = document.getElementById('versionSwitch');
+            document.querySelector('#versionSwitch + span').textContent = currentVersion === 'senior' ? '高中版' : '初中版';
+            loadData();
+        });
 
-            toggle.classList.toggle('fa-toggle-on');
-            toggle.classList.toggle('fa-toggle-off');
-            toggle.parentNode.querySelector('span').textContent = currentVersion === 'senior' ? '高中版' : '初中版';
-
-            await loadPoems(currentVersion);
+        let searchTimer;
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            clearTimeout(searchTimer);
+            currentFilters.search = e.target.value;
+            searchTimer = setTimeout(loadData, 500);
         });
 
         // 初始化加载
-        loadPoems(currentVersion);
+        loadData();
     </script>
 </body>
 

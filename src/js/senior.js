@@ -7,7 +7,7 @@ const poems = [
         "dynasty": "现代",
         "author": "毛泽东",
         "tags": [
-            "必修一"
+            "必修上"
         ],
         "display": "center",
         "content": [
@@ -58,7 +58,7 @@ const poems = [
         "dynasty": "东汉末",
         "author": "曹操",
         "tags": [
-            "必修一"
+            "必修上"
         ],
         "display": "center",
         "content": [
@@ -133,7 +133,7 @@ const poems = [
         "dynasty": "东晋",
         "author": "陶渊明",
         "tags": [
-            "必修一"
+            "必修上"
         ],
         "display": "center",
         "content": [
@@ -184,7 +184,7 @@ const poems = [
         "dynasty": "唐",
         "author": "李白",
         "tags": [
-            "必修一"
+            "必修上"
         ],
         "display": "center",
         "content": [
@@ -287,7 +287,7 @@ const poems = [
         "dynasty": "唐",
         "author": "杜甫",
         "tags": [
-            "必修一"
+            "必修上"
         ],
         "display": "center",
         "content": [
@@ -314,7 +314,7 @@ const poems = [
         "dynasty": "唐",
         "author": "白居易",
         "tags": [
-            "必修一"
+            "必修上"
         ],
         "display": "center",
         "content": [
@@ -506,7 +506,7 @@ const poems = [
         "dynasty": "宋",
         "author": "苏轼",
         "tags": [
-            "必修一"
+            "必修上"
         ],
         "display": "left",
         "content": [
@@ -525,7 +525,7 @@ const poems = [
         "dynasty": "宋",
         "author": "辛弃疾",
         "tags": [
-            "必修一",
+            "必修上",
             "词"
         ],
         "display": "left",
@@ -545,7 +545,7 @@ const poems = [
         "dynasty": "宋",
         "author": "李清照",
         "tags": [
-            "必修一",
+            "必修上",
             "词"
         ],
         "display": "left",
@@ -565,7 +565,7 @@ const poems = [
         "dynasty": "先秦",
         "author": "荀子",
         "tags": [
-            "必修一",
+            "必修上",
             "文言文"
         ],
         "display": "left",
@@ -593,7 +593,7 @@ const poems = [
         "dynasty": "唐",
         "author": "韩愈",
         "tags": [
-            "必修一",
+            "必修上",
             "文言文"
         ],
         "display": "left",
@@ -621,7 +621,7 @@ const poems = [
         "dynasty": "宋",
         "author": "苏轼",
         "tags": [
-            "必修一",
+            "必修上",
             "文言文"
         ],
         "display": "left",
@@ -653,7 +653,7 @@ const poems = [
         "dynasty": "清",
         "author": "姚鼐",
         "tags": [
-            "必修一",
+            "必修上",
             "文言文"
         ],
         "display": "left",
@@ -689,7 +689,7 @@ const poems = [
         "dynasty": "先秦",
         "author": "诗经·国风·邶风",
         "tags": [
-            "必修一"
+            "必修上"
         ],
         "display": "center",
         "content": [
@@ -724,7 +724,7 @@ const poems = [
         "dynasty": "两汉",
         "author": "佚名",
         "tags": [
-            "必修一"
+            "必修上"
         ],
         "display": "center",
         "content": [
@@ -751,7 +751,7 @@ const poems = [
         "dynasty": "五代",
         "author": "李煜",
         "tags": [
-            "必修一"
+            "必修上"
         ],
         "display": "left",
         "content": [
@@ -770,7 +770,7 @@ const poems = [
         "dynasty": "宋",
         "author": "秦观",
         "tags": [
-            "必修一"
+            "必修上"
         ],
         "display": "left",
         "content": [
@@ -1670,8 +1670,7 @@ const poems = [
         "dynasty": "唐",
         "author": "李白",
         "tags": [
-            "选必下",
-            "词"
+            "选必下"
         ],
         "display": "left",
         "content": [
