@@ -7,6 +7,11 @@
     <title>古诗文详情</title>
     <link rel="stylesheet" href="/css/font_awesome6.all.min.css">
     <style>
+        :root {
+            --primary-color: #A31F24;
+            --tag-color: #1890ff;
+        }
+
         body {
             font-family: "思源宋体", SimSun, serif;
             background: #f8f9fa;
@@ -14,7 +19,23 @@
             padding: 20px;
         }
 
+        .back-button {
+            position: absolute;
+            top: 15px;
+            left: 20px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+        }
+
+        .back-button i {
+            margin-right: 5px;
+        }
+
         .poem-container {
+            position: relative;
             max-width: 800px;
             margin: 0 auto;
             background: #fff;
@@ -26,7 +47,7 @@
 
         .poem-title {
             font-size: 24px;
-            color: #A31F24;
+            color: var(--primary-color);
             margin-bottom: 10px;
             text-align: center;
         }
@@ -52,14 +73,13 @@
         }
 
         .translation-toggle {
-            background: #A31F24;
+            background: var(--primary-color);
             color: white;
             border: none;
             padding: 8px 16px;
             border-radius: 4px;
             cursor: pointer;
-            margin: 10px 0 20px;
-            width: 100%;
+            margin-bottom: 20px;
             transition: background 0.3s;
         }
 
@@ -90,6 +110,10 @@
 
 <body>
     <div class="poem-container">
+        <a href="/" class="back-button">
+            <i class="fa-solid fa-arrow-left"></i>
+            返回首页
+        </a>
         <h1 class="poem-title" id="poemTitle"></h1>
         <div class="poem-meta" id="poemMeta"></div>
         <button class="translation-toggle" onclick="toggleTranslation()">显示翻译</button>
