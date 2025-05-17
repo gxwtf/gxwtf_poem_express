@@ -6,22 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title></title>
     <link rel="stylesheet" href="/css/font_awesome6.all.min.css">
+    <link rel="stylesheet" href="/css/basic.css">
+    <script src="/js/navbar.js"></script>
+    <script src="/js/backButton.js" defer></script>
     <style>
-        :root {
-            --primary-color: #A31F24;
-            --secondary-color: #6c757d;
-        }
-
-        body {
-            font-family: "思源宋体", SimSun, serif;
-            background: #f8f9fa;
-            margin: 0;
-            padding: 20px;
-        }
-
         .author-container {
             max-width: 800px;
-            margin: 0 auto;
+            margin: 20px auto;
             background: #fff;
             border-radius: 12px;
             padding: 30px;
@@ -136,10 +127,12 @@
 </head>
 
 <body>
+    <div id="navbar-container"></div>
+    
     <div class="author-container">
-        <a href="/" class="back-button">
+        <a href="#" class="back-button">
             <i class="fa-solid fa-arrow-left"></i>
-            返回首页
+            返回
         </a>
         
         <div class="author-header">

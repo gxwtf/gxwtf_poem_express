@@ -3,7 +3,7 @@ const path = require('path');
 const { parsePoem } = require('./js/parsePoem');
 const PoemRoutes = require('./js/poem'); // 引入 poem.js 路由
 const authorRoutes = require('./js/author'); // 引入 author.js 路由
-const allPoems = require('./src/js/all.js').default; // 加载所有古诗文数据
+const allPoems = require('./src/js/all').default; // 加载所有古诗文数据
 
 const app = express();
 const PORT = 1234;
@@ -25,14 +25,7 @@ app.use('/poem', PoemRoutes); // 为 PoemRoutes 添加 /poem 前缀
 
 // 定义通过 /古诗文名字 直接访问古诗文的路由
 app.get('/:title', (req, res) => {
-    const title = decodeURIComponent(req.params.title);
-    const poem = allPoems.find(p => p.title === title);
-
-    if (poem) {
-        res.sendFile(path.join(publicDir, 'viewPoem.html'));
-    } else {
-        res.status(404).send('未找到对应的古诗文');
-    }
+    res.sendFile(path.join(publicDir, 'viewPoem.html'));
 });
 
 // 捕获所有未匹配的路由，返回 404 页面

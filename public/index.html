@@ -6,35 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>广学古诗文</title>
     <link rel="stylesheet" href="/css/font_awesome6.all.min.css">
+    <link rel="stylesheet" href="/css/basic.css">
     <style>
-        :root {
-            --primary-color: #A31F24;
-            --tag-color: #1890ff;
-        }
-
-        body {
-            font-family: "思源宋体", SimSun, serif;
-            background: #f8f9fa;
-            margin: 0;
-        }
-
-        .navbar {
-            padding: 12px 24px;
-            background: #fff;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .navbar h1 {
-            margin: 0;
-            font-size: 24px;
-            color: var(--primary-color);
-        }
-
         .poem-container {
-            padding-top: 16px;
             padding: 24px;
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -47,6 +21,7 @@
             border-radius: 8px;
             padding: 16px;
             position: relative;
+            cursor: pointer;
         }
 
         .poem-title {
@@ -89,7 +64,6 @@
             gap: 6px;
             margin-top: 12px;
             flex-wrap: wrap;
-            position: static;
         }
 
         .tag {
@@ -109,24 +83,6 @@
             border-color: var(--tag-color);
         }
 
-        .version-toggle {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-left: auto;
-        }
-
-        .toggle-icon {
-            cursor: pointer;
-            color: var(--primary-color);
-            font-size: 24px;
-            transition: transform 0.3s;
-        }
-
-        .toggle-icon.active {
-            color: var(--tag-color);
-        }
-
         .poem-preview {
             line-height: 1.6;
             color: #495057;
@@ -138,7 +94,7 @@
         }
 
         .search-section {
-            padding: 20px 24px;
+            padding: 20px 20px;
             background: #fff;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
@@ -151,9 +107,9 @@
 
         .search-input {
             width: 100%;
-            padding: 12px 48px 12px 16px;
+            padding: 12px 16px;
             border: 2px solid var(--primary-color);
-            border-radius: 30px;
+            border-radius: 25px;
             font-size: 16px;
             transition: all 0.3s;
         }
@@ -163,26 +119,15 @@
             box-shadow: 0 0 8px rgba(163, 31, 36, 0.3);
         }
 
-        .search-icon {
-            position: absolute;
-            right: 16px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--primary-color);
-            font-size: 20px;
-        }
-
         .filter-tags {
             margin-top: 16px;
-            display: flex;
+            display: grid;
+            grid-template-rows: repeat(2, 1fr);
             gap: 12px;
-            flex-wrap: wrap;
         }
 
         .filter-group {
-            background: #f8f9fa;
             padding: 12px;
-            border-radius: 8px;
         }
 
         .filter-title {
@@ -192,20 +137,44 @@
         }
 
         .tag-btn {
-            padding: 6px 12px;
-            border-radius: 16px;
-            border: 1px solid #ddd;
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 2px solid #ddd;
             background: #fff;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.2s;
             font-size: 14px;
             margin: 4px;
+            position: relative;
+            overflow: hidden;
         }
 
-        .tag-btn.active {
-            border-color: var(--primary-color);
-            background: rgba(163, 31, 36, 0.1);
-            color: var(--primary-color);
+        .tag-btn.active[data-type="教材"] {
+            background: linear-gradient(45deg, #A31F24, #D32F2F);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 4px 12px rgba(163, 31, 36, 0.3);
+        }
+
+        .tag-btn.active[data-type="文体"] {
+            background: linear-gradient(45deg, #1890ff, #4dabf7);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 4px 12px rgba(24, 144, 255, 0.3);
+        }
+
+        .tag-btn.active[data-type="题材"] {
+            background: linear-gradient(45deg, #32CD32, #4CAF50);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+        }
+
+        .tag-btn.active[data-type="其他"] {
+            background: linear-gradient(45deg, #FFA500, #FF8C00);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 4px 12px rgba(255, 140, 0, 0.3);
         }
 
         .selected-tags {
@@ -214,13 +183,29 @@
             flex-wrap: wrap;
             margin-top: 12px;
         }
+
+        .no-results-container {
+            display: none;
+            text-align: center;
+        }
+
+        .no-results {
+            color: #6c757d;
+            font-size: 18px;
+        }
+
+        .no-results i {
+            font-size: 64px;
+            color: var(--primary-color);
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 
 <body>
     <nav class="navbar">
-        <h1>广学古诗文</h1>
-        <!-- 添加切换按钮 -->
+        <a href="/" class="navbar-title">广学古诗文</a>
         <div class="version-toggle">
             <span>高中版</span>
             <i id="versionSwitch" class="fas fa-toggle-on toggle-icon"></i>
@@ -230,41 +215,66 @@
     <section class="search-section">
         <div class="search-container">
             <input type="text" class="search-input" placeholder="搜索古诗文..." id="searchInput">
-            <i class="fas fa-search search-icon"></i>
 
             <div class="selected-tags" id="selectedTags"></div>
 
             <div class="filter-tags">
-                <div class="filter-group">
-                    <div class="filter-title">教材</div>
-                    <div class="tag-group">
-                        <button class="tag-btn" data-type="教材" data-value="必修上">必修上</button>
-                        <button class="tag-btn" data-type="教材" data-value="必修下">必修下</button>
-                        <button class="tag-btn" data-type="教材" data-value="选必上">选必上</button>
-                        <button class="tag-btn" data-type="教材" data-value="选必中">选必中</button>
-                        <button class="tag-btn" data-type="教材" data-value="选必下">选必下</button>
+                    <div class="filter-group">
+                        <div class="filter-title">教材</div>
+                        <div class="tag-group">
+                            <button class="tag-btn" data-type="教材" data-value="必修上">必修上</button>
+                            <button class="tag-btn" data-type="教材" data-value="必修下">必修下</button>
+                            <button class="tag-btn" data-type="教材" data-value="选必上">选必上</button>
+                            <button class="tag-btn" data-type="教材" data-value="选必中">选必中</button>
+                            <button class="tag-btn" data-type="教材" data-value="选必下">选必下</button>
+                        </div>
                     </div>
-                </div>
 
-                <div class="filter-group">
-                    <div class="filter-title">文体</div>
-                    <div class="tag-group">
-                        <button class="tag-btn" data-type="文体" data-value="诗">诗</button>
-                        <button class="tag-btn" data-type="文体" data-value="词">词</button>
-                        <button class="tag-btn" data-type="文体" data-value="曲">曲</button>
-                        <button class="tag-btn" data-type="文体" data-value="文言文">文言文</button>
-                        <button class="tag-btn" data-type="文体" data-value="戏剧">戏剧</button>
+                    <div class="filter-group">
+                        <div class="filter-title">文体</div>
+                        <div class="tag-group">
+                            <button class="tag-btn" data-type="文体" data-value="诗">诗</button>
+                            <button class="tag-btn" data-type="文体" data-value="词">词</button>
+                            <button class="tag-btn" data-type="文体" data-value="曲">曲</button>
+                            <button class="tag-btn" data-type="文体" data-value="文言文">文言文</button>
+                            <button class="tag-btn" data-type="文体" data-value="戏剧">戏剧</button>
+                        </div>
                     </div>
-                </div>
+
+                    <div class="filter-group">
+                        
+                        <div class="filter-title">题材</div>
+                        <div class="tag-group">
+                            <button class="tag-btn" data-type="题材" data-value="山水田园">山水田园</button>
+                            <button class="tag-btn" data-type="题材" data-value="咏史怀古">咏史怀古</button>
+                            <button class="tag-btn" data-type="题材" data-value="边塞">边塞</button>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <div class="filter-title">其他</div>
+                        <div class="tag-group">
+                            <button class="tag-btn" data-type="其他" data-value="背默">背默</button>
+                        </div>
+                    </div>
             </div>
         </div>
     </section>
 
     <div class="poem-container" id="poemContainer"></div>
+
+    <div class="no-results-container" id="noResultsContainer">
+        <div class="no-results">
+            <i class="fas fa-book-open"></i>
+            <div style="color:var(--primary-color)">找不到您查找的古诗文</div>
+        </div>
+    </div>
+
     <script>
         /* ================= 全局状态 ================= */
         let currentVersion = 'senior';
-        const currentFilters = { search: '', tags: {} }; // tags 改为对象
+        const currentFilters = { search: '', tags: {} }; // 分类存储 tags
+        const selectedTags = []; // 用于显示的标签列表
 
         /* ============ 调整预览行数 ============ */
         function adjustPreviewHeight(card) {
@@ -295,62 +305,116 @@
             return params.toString();
         }
 
+        /* ============== 更新已选标签显示 ============== */
+        function updateSelectedTagsDisplay() {
+            const selectedTagsContainer = document.getElementById('selectedTags');
+            selectedTagsContainer.innerHTML = selectedTags
+                .map(tag => `
+                    <div class="tag-btn active" data-value="${tag}" onclick="removeTag('${tag}')">
+                        ${tag} <i class="fas fa-times"></i>
+                    </div>
+                `)
+                .join('');
+        }
+
+        /* ============== 标签状态更新处理函数 ============== */
+        function updateTagState(btn) {
+            btn.classList.toggle('active');
+
+            const category = btn.closest('.filter-group').querySelector('.filter-title').textContent.trim();
+            const value = btn.dataset.value;
+
+            // 更新分类存储的 tags
+            if (!currentFilters.tags[category]) {
+                currentFilters.tags[category] = [];
+            }
+
+            if (btn.classList.contains('active')) {
+                currentFilters.tags[category].push(value);
+                selectedTags.push(value); // 添加到显示的标签列表
+            } else {
+                currentFilters.tags[category] = currentFilters.tags[category].filter(tag => tag !== value);
+                if (currentFilters.tags[category].length === 0) {
+                    delete currentFilters.tags[category];
+                }
+                const index = selectedTags.indexOf(value);
+                if (index > -1) {
+                    selectedTags.splice(index, 1); // 从显示的标签列表中移除
+                }
+            }
+
+            // 输出调试日志
+            console.log('当前分类存储的标签:', currentFilters.tags);
+            console.log('当前显示的标签:', selectedTags);
+
+            // 更新显示和重新加载数据
+            updateSelectedTagsDisplay();
+            loadData();
+        }
+
+        /* ============== 删除标签 ============== */
+        function removeTag(tag) {
+            // 从 selectedTags 中移除
+            const index = selectedTags.indexOf(tag);
+            if (index > -1) {
+                selectedTags.splice(index, 1);
+            }
+
+            // 从分类存储的 tags 中移除
+            for (const category in currentFilters.tags) {
+                currentFilters.tags[category] = currentFilters.tags[category].filter(t => t !== tag);
+                if (currentFilters.tags[category].length === 0) {
+                    delete currentFilters.tags[category];
+                }
+            }
+
+            // 在 filter-tags 中找到对应的标签并调用 updateTagState
+            const tagButton = document.querySelector(`.filter-tags .tag-btn[data-value="${tag}"]`);
+            if (tagButton) {
+                updateTagState(tagButton); // 调用标签状态更新函数
+            }
+
+            // 更新显示和重新加载数据
+            updateSelectedTagsDisplay();
+            loadData();
+        }
+
         /* ============== 渲染诗文卡片 ============== */
         function renderPoems(poems) {
             const container = document.getElementById('poemContainer');
-            container.innerHTML = poems.map(poem => `
-                <div class="poem-card" onclick="location.href='/${encodeURIComponent(poem.title)}'">
-                    <h2 class="poem-title" data-title="${poem.title}">${poem.title}</h2>
-                    <div class="poem-meta">【${poem.dynasty}】${poem.author}</div>
-                    <div class="poem-preview">${poem.content.map(c => c.line).join('')}</div>
-                    <div class="tag-container">
-                        ${poem.tags.map(tag => `
-                            <div class="tag ${tag.includes('必修') ? 'tag-required' : 'tag-literary'}">
-                                ${tag}
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-            `).join('');
+            const noResults = document.getElementById('noResultsContainer');
+            if (poems.length === 0) {
+                // 显示无结果提示
+                container.innerHTML = '';
+                noResults.style.display = 'block';
+            } else {
+                // 隐藏无结果提示
+                noResults.style.display = 'none';
 
-            container.querySelectorAll('.poem-card').forEach(adjustPreviewHeight);
+                // 渲染诗文卡片
+                container.innerHTML = poems.map(poem => `
+                    <div class="poem-card" onclick="location.href='/${encodeURIComponent(poem.title)}'">
+                        <h2 class="poem-title" data-title="${poem.title}">${poem.title}</h2>
+                        <div class="poem-meta">【${poem.dynasty}】${poem.author}</div>
+                        <div class="poem-preview">${poem.content.map(c => c.line).join('')}</div>
+                        <div class="tag-container">
+                            ${poem.tags.map(tag => `
+                                <div class="tag ${tag.includes('必修') ? 'tag-required' : 'tag-literary'}">
+                                    ${tag}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `).join('');
+
+                container.querySelectorAll('.poem-card').forEach(adjustPreviewHeight);
+            }
         }
 
-        /* ============== 标签点击事件 ============== */
+        /* ============== 标签点击事件绑定 ============== */
         document.querySelectorAll('.tag-btn').forEach(btn => {
             btn.addEventListener('click', () => {
-                btn.classList.toggle('active');
-
-                // 更新当前过滤器
-                const category = btn.closest('.filter-group').querySelector('.filter-title').textContent.trim();
-                if (!currentFilters.tags[category]) {
-                    currentFilters.tags[category] = [];
-                }
-
-                const value = btn.dataset.value;
-                if (btn.classList.contains('active')) {
-                    currentFilters.tags[category].push(value);
-                } else {
-                    currentFilters.tags[category] = currentFilters.tags[category].filter(tag => tag !== value);
-                    if (currentFilters.tags[category].length === 0) {
-                        delete currentFilters.tags[category];
-                    }
-                }
-
-                // 输出调试日志
-                console.log('当前过滤器标签:', currentFilters.tags);
-
-                // 更新已选标签显示
-                document.getElementById('selectedTags').innerHTML = Object.entries(currentFilters.tags)
-                    .map(([category, values]) => `
-                        <div class="filter-group">
-                            <div class="filter-title">${category}</div>
-                            ${values.map(value => `<div class="tag-btn active">${value}</div>`).join('')}
-                        </div>
-                    `).join('');
-
-                // 重新加载数据
-                loadData();
+                updateTagState(btn);
             });
         });
 
@@ -367,9 +431,12 @@
         }
 
         /* ============== 事件监听 ============== */
-        document.getElementById('versionSwitch').addEventListener('click', () => {
+        document.getElementById('versionSwitch').addEventListener('click', async () => {
             currentVersion = currentVersion === 'senior' ? 'junior' : 'senior';
-            document.querySelector('#versionSwitch + span').textContent = currentVersion === 'senior' ? '高中版' : '初中版';
+            const toggle = document.getElementById('versionSwitch');
+            toggle.classList.toggle('fa-toggle-on');
+            toggle.classList.toggle('fa-toggle-off');
+            toggle.parentNode.querySelector('span').textContent = currentVersion === 'senior' ? '高中版' : '初中版';
             loadData();
         });
 
