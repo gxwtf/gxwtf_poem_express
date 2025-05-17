@@ -219,44 +219,37 @@
             <div class="selected-tags" id="selectedTags"></div>
 
             <div class="filter-tags">
-                    <div class="filter-group">
-                        <div class="filter-title">教材</div>
-                        <div class="tag-group">
-                            <button class="tag-btn" data-type="教材" data-value="必修上">必修上</button>
-                            <button class="tag-btn" data-type="教材" data-value="必修下">必修下</button>
-                            <button class="tag-btn" data-type="教材" data-value="选必上">选必上</button>
-                            <button class="tag-btn" data-type="教材" data-value="选必中">选必中</button>
-                            <button class="tag-btn" data-type="教材" data-value="选必下">选必下</button>
-                        </div>
-                    </div>
+                <div class="filter-group">
+                    <div class="filter-title">教材</div>
+                    <div class="tag-group" id="textbookTags"></div> <!-- 动态更新的教材标签容器 -->
+                </div>
 
-                    <div class="filter-group">
-                        <div class="filter-title">文体</div>
-                        <div class="tag-group">
-                            <button class="tag-btn" data-type="文体" data-value="诗">诗</button>
-                            <button class="tag-btn" data-type="文体" data-value="词">词</button>
-                            <button class="tag-btn" data-type="文体" data-value="曲">曲</button>
-                            <button class="tag-btn" data-type="文体" data-value="文言文">文言文</button>
-                            <button class="tag-btn" data-type="文体" data-value="戏剧">戏剧</button>
-                        </div>
+                <div class="filter-group">
+                    <div class="filter-title">文体</div>
+                    <div class="tag-group">
+                        <button class="tag-btn" data-type="文体" data-value="诗">诗</button>
+                        <button class="tag-btn" data-type="文体" data-value="词">词</button>
+                        <button class="tag-btn" data-type="文体" data-value="曲">曲</button>
+                        <button class="tag-btn" data-type="文体" data-value="文言文">文言文</button>
+                        <button class="tag-btn" data-type="文体" data-value="戏剧">戏剧</button>
                     </div>
+                </div>
 
-                    <div class="filter-group">
-                        
-                        <div class="filter-title">题材</div>
-                        <div class="tag-group">
-                            <button class="tag-btn" data-type="题材" data-value="山水田园">山水田园</button>
-                            <button class="tag-btn" data-type="题材" data-value="咏史怀古">咏史怀古</button>
-                            <button class="tag-btn" data-type="题材" data-value="边塞">边塞</button>
-                        </div>
+                <div class="filter-group">
+                    <div class="filter-title">题材</div>
+                    <div class="tag-group">
+                        <button class="tag-btn" data-type="题材" data-value="山水田园">山水田园</button>
+                        <button class="tag-btn" data-type="题材" data-value="咏史怀古">咏史怀古</button>
+                        <button class="tag-btn" data-type="题材" data-value="边塞">边塞</button>
                     </div>
-                    
-                    <div class="filter-group">
-                        <div class="filter-title">其他</div>
-                        <div class="tag-group">
-                            <button class="tag-btn" data-type="其他" data-value="背默">背默</button>
-                        </div>
+                </div>
+
+                <div class="filter-group">
+                    <div class="filter-title">其他</div>
+                    <div class="tag-group">
+                        <button class="tag-btn" data-type="其他" data-value="背默">背默</button>
                     </div>
+                </div>
             </div>
         </div>
     </section>
@@ -418,6 +411,28 @@
             });
         });
 
+        /* ============== 动态更新教材标签 ============== */
+        function updateTextbookTags(version) {
+            const textbookTags = document.getElementById('textbookTags');
+            const seniorTags = ['必修上', '必修下', '选必上', '选必中', '选必下'];
+            const juniorTags = ['七上', '七下', '八上', '八下', '九上', '九下'];
+
+            const tags = version === 'senior' ? seniorTags : juniorTags;
+            textbookTags.innerHTML = tags.map(tag => `
+                <button class="tag-btn" data-type="教材" data-value="${tag}">${tag}</button>
+            `).join('');
+
+            // 重新绑定事件
+            document.querySelectorAll('.tag-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    updateTagState(btn);
+                });
+            });
+        }
+
+        // 初始化教材标签
+        updateTextbookTags(currentVersion);
+
         /* ============== 数据加载 ============== */
         async function loadData() {
             try {
@@ -437,7 +452,9 @@
             toggle.classList.toggle('fa-toggle-on');
             toggle.classList.toggle('fa-toggle-off');
             toggle.parentNode.querySelector('span').textContent = currentVersion === 'senior' ? '高中版' : '初中版';
-            loadData();
+
+            updateTextbookTags(currentVersion); // 更新教材标签
+            loadData(); // 重新加载数据
         });
 
         let searchTimer;
