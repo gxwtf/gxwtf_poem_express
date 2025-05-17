@@ -1,7 +1,9 @@
 const express = require('express');
 const path = require('path');
 const { parsePoem } = require('./js/parsePoem');
-const listRoutes = require('./js/list'); // 引入 list.js 路由
+const PoemRoutes = require('./js/poem'); // 引入 poem.js 路由
+const authorRoutes = require('./js/author'); // 引入 author.js 路由
+const allPoems = require('./src/js/all.js').default; // 加载所有古诗文数据
 
 const app = express();
 const PORT = 1234;
@@ -9,30 +11,36 @@ const PORT = 1234;
 // 检测是否传入 --parsePoem 参数
 const args = process.argv.slice(2);
 
-(async () => {
-    if (args.includes('--parsePoem')) {
-        try {
-            await parsePoem(); // 等待 parsePoem 函数完成
-        } catch (error) {
-            console.error('解析诗文时出错:', error);
-            process.exit(1); // 解析失败时退出程序
-        }
+if (args.includes('--parsePoem')) {
+    parsePoem();
+}
+
+// 设置 public 目录为静态文件根目录
+const publicDir = path.join(__dirname, 'public');
+app.use(express.static(publicDir, { extensions: ['html'] })); // 支持省略 .html 后缀
+
+// 挂载路由，添加唯一前缀
+app.use('/author', authorRoutes); // 为 authorRoutes 添加 /author 前缀
+app.use('/poem', PoemRoutes); // 为 PoemRoutes 添加 /poem 前缀
+
+// 定义通过 /古诗文名字 直接访问古诗文的路由
+app.get('/:title', (req, res) => {
+    const title = decodeURIComponent(req.params.title);
+    const poem = allPoems.find(p => p.title === title);
+
+    if (poem) {
+        res.sendFile(path.join(publicDir, 'viewPoem.html'));
+    } else {
+        res.status(404).send('未找到对应的古诗文');
     }
+});
 
-    // 设置 public 目录为静态文件根目录
-    const publicDir = path.join(__dirname, 'public');
-    app.use(express.static(publicDir, { extensions: ['html'] })); // 支持省略 .html 后缀
+// 捕获所有未匹配的路由，返回 404 页面
+app.use((req, res) => {
+    res.status(404).sendFile(path.join(publicDir, '404.html'));
+});
 
-    // 挂载 list.js 路由
-    app.use(listRoutes);
-
-    // 捕获所有未匹配的路由，返回 404 页面
-    app.use((req, res) => {
-        res.status(404).sendFile(path.join(publicDir, '404.html'));
-    });
-
-    // 启动服务器
-    app.listen(PORT, () => {
-        console.log(`服务器已启动，访问地址：http://localhost:${PORT}`);
-    });
-})();
+// 启动服务器
+app.listen(PORT, () => {
+    console.log(`服务器已启动，访问地址：http://localhost:${PORT}`);
+});

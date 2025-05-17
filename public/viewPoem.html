@@ -130,7 +130,11 @@
 
                 document.title = poem.title;
                 document.getElementById('poemTitle').textContent = poem.title;
-                document.getElementById('poemMeta').textContent = `【${poem.dynasty}】${poem.author}`;
+
+                // 设置作者名为可点击链接
+                document.getElementById('poemMeta').innerHTML = `
+                    【${poem.dynasty}】<a href="/author/${encodeURIComponent(poem.author)}" class="author-link">${poem.author}</a>
+                `;
 
                 // 生成带样式的内容
                 const contentHTML = poem.content.map(c => {

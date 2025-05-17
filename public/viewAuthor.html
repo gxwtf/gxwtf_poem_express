@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>作者详情</title>
+    <link rel="stylesheet" href="/css/font_awesome6.all.min.css">
+    <style>
+        :root {
+            --primary-color: #A31F24;
+        }
+
+        body {
+            font-family: "思源宋体", SimSun, serif;
+            background: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .author-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .author-name {
+            font-size: 24px;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .author-image {
+            display: block;
+            max-width: 150px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .author-intro {
+            line-height: 1.8;
+            color: #495057;
+            margin-bottom: 20px;
+        }
+
+        .back-button {
+            display: inline-block;
+            margin-top: 20px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .back-button i {
+            margin-right: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="author-container">
+        <h1 class="author-name" id="authorName"></h1>
+        <img id="authorImage" class="author-image" alt="作者头像">
+        <p class="author-intro" id="authorIntro"></p>
+        <p class="author-intro" id="authorDetailIntro"></p>
+        <a href="/" class="back-button">
+            <i class="fa-solid fa-arrow-left"></i>
+            返回首页
+        </a>
+    </div>
+
+    <script>
+        async function loadAuthor() {
+            const name = decodeURIComponent(location.pathname.split('/').pop());
+            try {
+                const response = await fetch(`/author?name=${name}`);
+                if (!response.ok) throw new Error('未找到该作者的信息');
+                const author = await response.json();
+
+                document.title = author.name;
+                document.getElementById('authorName').textContent = author.name;
+                document.getElementById('authorImage').src = author.image;
+                document.getElementById('authorIntro').textContent = author.intro;
+            } catch (error) {
+                document.body.innerHTML = '<h1>加载失败</h1>';
+                console.error(error);
+            }
+        }
+
+        loadAuthor();
+    </script>
+</body>
+
+</html>
