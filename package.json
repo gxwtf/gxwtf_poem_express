@@ -12,7 +12,6 @@
   },
   "license": "ISC",
   "author": "",
-  "type": "commonjs",
   "main": "main.js",
   "scripts": {
     "start": "node main.js",
