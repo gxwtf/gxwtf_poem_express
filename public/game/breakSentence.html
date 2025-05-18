@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>句读知不知</title>
+    <link rel="stylesheet" href="/css/basic.css">
+    <script src="/js/backButton.js" defer></script>
+    <style>
+        .sentence-container {
+            max-width: 800px;
+            margin: 20px auto;
+            background: #fff;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            line-height: 2;
+            font-size: 18px;
+        }
+
+        .sentence-container span {
+            cursor: pointer;
+            position: relative;
+        }
+
+        .sentence-container span.gap {
+            display: inline-block;
+            width: 10px;
+            height: 20px;
+        }
+
+        .sentence-container span.gap.break {
+            background-color: #007bff; /* 蓝色 */
+        }
+
+        .sentence-container span.gap.correct {
+            background-color: #28a745; /* 绿色 */
+        }
+
+        .sentence-container span.gap.wrong {
+            background-color: #dc3545; /* 红色 */
+        }
+
+        .sentence-container span.gap.missing {
+            background-color: #ffc107; /* 黄色 */
+        }
+
+        .submit-button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .submit-button:hover {
+            background: #8a1a1f;
+        }
+
+        .legend {
+            max-width: 800px;
+            margin: 20px auto;
+            font-size: 14px;
+            color: #6c757d;
+        }
+
+        .legend span {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            margin-right: 8px;
+            border-radius: 2px;
+        }
+
+        .stats {
+            max-width: 800px;
+            margin: 20px auto;
+            font-size: 16px;
+            color: #333;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sentenceContainer = document.getElementById('sentenceContainer');
+            const submitButton = document.getElementById('submitButton');
+            const statsContainer = document.getElementById('statsContainer');
+            const userBreaks = new Set();
+
+            async function loadGame() {
+                const title = decodeURIComponent(location.pathname.split('/').pop());
+                const res = await fetch(`/game/breakSentence/getPoem/${title}`);
+                const data = await res.json();
+
+                document.title = `句读知不知 - ${data.title}`;
+                sentenceContainer.innerHTML = data.content.split('').map((char, index) => `
+                    <span>${char}</span><span class="gap" data-index="${index}"></span>
+                `).join('');
+
+                sentenceContainer.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('gap')) {
+                        const index = parseInt(e.target.dataset.index, 10);
+                        if (userBreaks.has(index)) {
+                            userBreaks.delete(index);
+                            e.target.classList.remove('break'); // 移除蓝色
+                        } else {
+                            userBreaks.add(index);
+                            e.target.classList.add('break'); // 添加蓝色
+                        }
+                    }
+                });
+            }
+
+            submitButton.addEventListener('click', async () => {
+                const title = decodeURIComponent(location.pathname.split('/').pop());
+                const res = await fetch(`/game/breakSentence/getResult/${title}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userBreaks: Array.from(userBreaks) }),
+                });
+                const result = await res.json();
+
+                // 更新断句颜色
+                document.querySelectorAll('.gap').forEach((gap) => {
+                    const index = parseInt(gap.dataset.index, 10);
+                    if (result.correctBreaks.includes(index)) {
+                        gap.classList.add('correct');
+                    } else if (result.wrongBreaks.includes(index)) {
+                        gap.classList.add('wrong');
+                    } else if (result.missingBreaks.includes(index)) {
+                        gap.classList.add('missing');
+                    }
+                });
+
+                // 显示统计信息
+                statsContainer.innerHTML = `
+                    正确：${result.correct}个  错误：${result.errors}个  漏标：${result.missing}个
+                `;
+            });
+
+            loadGame();
+        });
+    </script>
+</head>
+<body>
+    <div id="navbar-container"></div>
+    <div class="sentence-container" id="sentenceContainer"></div>
+    <button class="submit-button" id="submitButton">提交</button>
+    <div class="legend">
+        <p>
+            <span style="background-color: #28a745;"></span>正确
+            <span style="background-color: #dc3545;"></span>错误
+            <span style="background-color: #ffc107;"></span>漏标
+        </p>
+    </div>
+    <div class="stats" id="statsContainer"></div>
+</body>
+</html>

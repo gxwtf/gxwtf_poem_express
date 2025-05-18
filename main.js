@@ -3,6 +3,7 @@ const path = require('path');
 const { parsePoem } = require('./js/parsePoem');
 const PoemRoutes = require('./js/poem'); // 引入 poem.js 路由
 const authorRoutes = require('./js/author'); // 引入 author.js 路由
+const breakSentenceRoutes = require('./js/breakSentence'); // 引入 breakSentence.js 路由
 const allPoems = require('./src/js/all').default; // 加载所有古诗文数据
 
 const app = express();
@@ -15,13 +16,14 @@ if (args.includes('--parsePoem')) {
     parsePoem();
 }
 
-// 设置 public 目录为静态文件根目录
+// 设置 public 目录为静态文件根目录，支持省略 .html 后缀
 const publicDir = path.join(__dirname, 'public');
-app.use(express.static(publicDir, { extensions: ['html'] })); // 支持省略 .html 后缀
+app.use(express.static(publicDir, { extensions: ['html'] }));
 
 // 挂载路由，添加唯一前缀
 app.use('/author', authorRoutes); // 为 authorRoutes 添加 /author 前缀
 app.use('/poem', PoemRoutes); // 为 PoemRoutes 添加 /poem 前缀
+app.use('/game/breakSentence', breakSentenceRoutes); // 为 breakSentenceRoutes 添加前缀
 
 // 定义通过 /古诗文名字 直接访问古诗文的路由
 app.get('/:title', (req, res) => {
