@@ -56,7 +56,7 @@ router.get('/getPoem/:title', (req, res) => {
     }
 
     const { cleanText, breakInfo } = processText(poem.content.map(c => c.line).join(''));
-    res.json({ title: poem.title, content: cleanText, breakInfo });
+    res.json({ title: poem.title, dynasty: poem.dynasty, author: poem.author, content: cleanText, breakInfo });
 });
 
 // 校验用户提交的断句结果

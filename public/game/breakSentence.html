@@ -1,116 +1,393 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>句读知不知</title>
     <link rel="stylesheet" href="/css/basic.css">
-    <script src="/js/backButton.js" defer></script>
+    <script src="/js/backButton.js"></script>
+    <script src="/js/navbar.js"></script>
     <style>
-        .sentence-container {
-            max-width: 800px;
-            margin: 20px auto;
-            background: #fff;
-            border-radius: 12px;
-            padding: 30px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            line-height: 2;
-            font-size: 18px;
+        :root {
+            --primary: #2c3e50;
+            --correct: #27ae60;
+            --wrong: #e74c3c;
+            --missing: #f1c40f;
+            --text: #34495e;
+            --meta: #95a5a6;
+            --subtitle: #7f8c8d;
         }
 
-        .sentence-container span {
-            cursor: pointer;
+        .header {
+            background: white;
+            padding: 40px 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
             position: relative;
         }
 
-        .sentence-container span.gap {
+        .game-title {
+            font-size: 2.8rem;
+            color: #2c3e50;
+            margin: 0 0 15px;
+            letter-spacing: 1.5px;
+            text-align: center;
+            position: relative;
+            line-height: 1.2;
+        }
+
+        .game-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 3px;
+            background: #e74c3c;
+            margin: 15px auto 0;
+            border-radius: 2px;
+        }
+
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 1.2rem;
+            text-align: center;
+            margin: 20px auto;
+            max-width: 680px;
+            line-height: 1.6;
+            letter-spacing: 0.5px;
+        }
+
+        .poem-meta {
+            margin-top: 25px;
+            font-size: 1.1rem;
+            color: #95a5a6;
+            text-align: center;
+        }
+
+        .poem-meta a {
+            color: #2980b9;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            padding-bottom: 2px;
+            border-bottom: 1px solid transparent;
+        }
+
+        .poem-meta a:hover {
+            color: #e74c3c;
+            border-bottom-color: currentColor;
+        }
+
+        /* 作者链接样式 */
+        .author-link {
+            color: var(--primary);
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        .author-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: currentColor;
+            transition: width 0.3s;
+        }
+
+        .author-link:hover {
+            color: #1a252f;
+        }
+
+        .author-link:hover::after {
+            width: 100%;
+        }
+
+        /* 统计颜色 */
+        .stat-correct {
+            color: var(--correct);
+        }
+
+        .stat-wrong {
+            color: var(--wrong);
+        }
+
+        .stat-missing {
+            color: var(--missing);
+        }
+
+        .sentence-container {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            position: relative;
+            margin-bottom: 30px;
+            margin-top: 20px;
+        }
+
+        .sentence-content {
+            font-size: 1.5rem;
+            line-height: 2.4;
+            color: var(--text);
+            text-align: center;
+            letter-spacing: 1px;
+            word-spacing: 8px;
+        }
+
+        .sentence-content span {
             display: inline-block;
-            width: 10px;
-            height: 20px;
+            vertical-align: middle;
+            position: relative;
         }
 
-        .sentence-container span.gap.break {
-            background-color: #007bff; /* 蓝色 */
+        .sentence-gap {
+            display: inline-block;
+            width: 20px;
+            height: 32px;
+            margin: 0 -2px;
+            position: relative;
+            cursor: pointer;
+            vertical-align: middle;
+            transition: all 0.2s;
         }
 
-        .sentence-container span.gap.correct {
-            background-color: #28a745; /* 绿色 */
+        .sentence-gap::after {
+            content: '/';
+            position: absolute;
+            left: 80%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            opacity: 0;
+            transition: opacity 0.2s, color 0.3s;
         }
 
-        .sentence-container span.gap.wrong {
-            background-color: #dc3545; /* 红色 */
+        .sentence-gap.active::after {
+            opacity: 1;
         }
 
-        .sentence-container span.gap.missing {
-            background-color: #ffc107; /* 黄色 */
+        .sentence-gap.correct::after {
+            color: var(--correct);
+            animation: pop 0.3s;
+        }
+
+        .sentence-gap.wrong::after {
+            color: var(--wrong);
+            animation: shake 0.4s;
+        }
+
+        .sentence-gap.missing::after {
+            color: var(--missing);
+            animation: pulse 1s infinite;
         }
 
         .submit-button {
             display: block;
-            margin: 20px auto;
-            padding: 10px 20px;
-            background: var(--primary-color);
+            margin: 30px auto;
+            padding: 14px 36px;
+            background: var(--primary);
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 30px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            transition: all 0.2s;
+            box-shadow: 0 4px 15px rgba(44, 62, 80, 0.2);
         }
 
         .submit-button:hover {
-            background: #8a1a1f;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(44, 62, 80, 0.3);
+            background: #1e2b37;
         }
 
         .legend {
             max-width: 800px;
-            margin: 20px auto;
-            font-size: 14px;
-            color: #6c757d;
+            margin: 30px auto;
+            display: none;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            animation: fadeIn 0.6s ease;
         }
 
-        .legend span {
-            display: inline-block;
-            width: 12px;
-            height: 12px;
+        .legend-item {
+            display: inline-flex;
+            align-items: center;
+            margin-right: 25px;
+            font-size: 1rem;
+        }
+
+        .legend-marker {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
             margin-right: 8px;
-            border-radius: 2px;
         }
 
         .stats {
             max-width: 800px;
-            margin: 20px auto;
-            font-size: 16px;
-            color: #333;
+            margin: 25px auto;
+            text-align: center;
+            font-size: 1.1rem;
+            color: var(--text);
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        @keyframes pop {
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+
+            50% {
+                transform: translate(-50%, -50%) scale(1.4);
+            }
+
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        @keyframes shake {
+            0% {
+                transform: translate(-50%, -50%) translateX(0);
+            }
+
+            25% {
+                transform: translate(-50%, -50%) translateX(4px);
+            }
+
+            50% {
+                transform: translate(-50%, -50%) translateX(-4px);
+            }
+
+            75% {
+                transform: translate(-50%, -50%) translateX(2px);
+            }
+
+            100% {
+                transform: translate(-50%, -50%) translateX(0);
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 0.8;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0.8;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            body {
+                padding: 20px 10px;
+            }
+
+            .game-title {
+                font-size: 2rem;
+            }
+
+            .sentence-content {
+                font-size: 1.3rem;
+                line-height: 2;
+            }
+
+            .sentence-gap {
+                width: 20px;
+                height: 32px;
+            }
+
+            .sentence-gap::after {
+                font-size: 1.6rem;
+            }
         }
     </style>
+</head>
+
+<body>
+    <div id="navbar-container"></div>
+
+    <div class="header">
+        <h1 class="game-title">句读知不知</h1>
+        <p class="subtitle">课本上的每一篇新文章都是一个很好的练习断句的机会</p>
+        <div class="poem-meta" id="poemMeta"></div>
+    </div>
+
+    <div class="sentence-container">
+        <div class="sentence-content" id="sentenceContainer"></div>
+    </div>
+
+    <button class="submit-button" id="submitButton">提交批改</button>
+
+    <div class="legend">
+        <div class="legend-item">
+            <div class="legend-marker" style="background: var(--correct);"></div>
+            正确断句
+        </div>
+        <div class="legend-item">
+            <div class="legend-marker" style="background: var(--wrong);"></div>
+            错误标记
+        </div>
+        <div class="legend-item">
+            <div class="legend-marker" style="background: var(--missing);"></div>
+            遗漏断句
+        </div>
+    </div>
+    <div class="stats" id="statsContainer"></div>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const sentenceContainer = document.getElementById('sentenceContainer');
             const submitButton = document.getElementById('submitButton');
             const statsContainer = document.getElementById('statsContainer');
-            const userBreaks = new Set();
+            const legend = document.querySelector('.legend');
+            let userBreaks = new Set();
 
             async function loadGame() {
                 const title = decodeURIComponent(location.pathname.split('/').pop());
                 const res = await fetch(`/game/breakSentence/getPoem/${title}`);
                 const data = await res.json();
 
-                document.title = `句读知不知 - ${data.title}`;
+                document.title = `「${data.title}」句读练习`;
+
+                document.getElementById('poemMeta').innerHTML = `
+                    【${data.dynasty}】<a href="/author/${encodeURIComponent(data.author)}" 
+                    class="author-link">${data.author}</a>
+                `;
+
                 sentenceContainer.innerHTML = data.content.split('').map((char, index) => `
-                    <span>${char}</span><span class="gap" data-index="${index}"></span>
+                    <span>${char}</span><span class="sentence-gap" data-index="${index}"></span>
                 `).join('');
 
-                sentenceContainer.addEventListener('click', (e) => {
-                    if (e.target.classList.contains('gap')) {
-                        const index = parseInt(e.target.dataset.index, 10);
-                        if (userBreaks.has(index)) {
-                            userBreaks.delete(index);
-                            e.target.classList.remove('break'); // 移除蓝色
-                        } else {
-                            userBreaks.add(index);
-                            e.target.classList.add('break'); // 添加蓝色
-                        }
-                    }
+                document.querySelectorAll('.sentence-gap').forEach(gap => {
+                    gap.addEventListener('click', function () {
+                        const index = parseInt(this.dataset.index);
+                        this.classList.toggle('active');
+                        userBreaks.has(index) ? userBreaks.delete(index) : userBreaks.add(index);
+                    });
                 });
             }
 
@@ -119,43 +396,31 @@
                 const res = await fetch(`/game/breakSentence/getResult/${title}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ userBreaks: Array.from(userBreaks) }),
+                    body: JSON.stringify({ userBreaks: [...userBreaks] })
                 });
                 const result = await res.json();
 
-                // 更新断句颜色
-                document.querySelectorAll('.gap').forEach((gap) => {
-                    const index = parseInt(gap.dataset.index, 10);
-                    if (result.correctBreaks.includes(index)) {
-                        gap.classList.add('correct');
-                    } else if (result.wrongBreaks.includes(index)) {
-                        gap.classList.add('wrong');
-                    } else if (result.missingBreaks.includes(index)) {
-                        gap.classList.add('missing');
-                    }
+                document.querySelectorAll('.sentence-gap').forEach(gap => {
+                    gap.classList.remove('correct', 'wrong', 'missing');
+                    const index = parseInt(gap.dataset.index);
+
+                    if (result.correctBreaks.includes(index)) gap.classList.add('correct');
+                    if (result.wrongBreaks.includes(index)) gap.classList.add('wrong');
+                    if (result.missingBreaks.includes(index)) gap.classList.add('missing');
                 });
 
-                // 显示统计信息
+                legend.style.display = 'block';
                 statsContainer.innerHTML = `
-                    正确：${result.correct}个  错误：${result.errors}个  漏标：${result.missing}个
+                    <span class="stat-correct">正确：${result.correct}处</span> | 
+                    <span class="stat-wrong">错误：${result.errors}处</span> | 
+                    <span class="stat-missing">遗漏：${result.missing}处</span>
                 `;
+                submitButton.style.display = 'none';
             });
 
             loadGame();
         });
     </script>
-</head>
-<body>
-    <div id="navbar-container"></div>
-    <div class="sentence-container" id="sentenceContainer"></div>
-    <button class="submit-button" id="submitButton">提交</button>
-    <div class="legend">
-        <p>
-            <span style="background-color: #28a745;"></span>正确
-            <span style="background-color: #dc3545;"></span>错误
-            <span style="background-color: #ffc107;"></span>漏标
-        </p>
-    </div>
-    <div class="stats" id="statsContainer"></div>
 </body>
+
 </html>
