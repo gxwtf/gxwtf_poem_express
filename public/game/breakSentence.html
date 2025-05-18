@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>句读知不知</title>
+    <link rel="stylesheet" href="/css/font_awesome6.all.min.css">
     <link rel="stylesheet" href="/css/basic.css">
     <script src="/js/backButton.js"></script>
     <script src="/js/navbar.js"></script>
@@ -21,7 +22,7 @@
 
         .header {
             background: white;
-            padding: 40px 20px;
+            padding: 20px 20px;
             margin-top: 20px;
             margin-bottom: 30px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
@@ -80,10 +81,10 @@
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             padding-bottom: 2px;
             text-decoration: none;
-
         }
 
         .poem-meta a:hover {
+            color: var(--primary-color-hover);
             text-decoration: none;
         }
 
@@ -115,7 +116,6 @@
             font-size: 1.5rem;
             line-height: 2.4;
             color: var(--text);
-            text-align: center;
             letter-spacing: 1px;
             word-spacing: 8px;
         }
@@ -225,6 +225,29 @@
             letter-spacing: 0.5px;
         }
 
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: var(--primary-color);
+            color: white !important;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .back-button i {
+            margin-right: 8px;
+        }
+
+        .back-button:hover {
+            background: var(--primary-color-hover);
+            transform: translateX(-3px);
+        }
+
+
+
         @keyframes pop {
             0% {
                 transform: translate(-50%, -50%) scale(1);
@@ -300,6 +323,10 @@
     <div id="navbar-container"></div>
 
     <div class="header">
+        <a href="#" class="back-button">
+            <i class="fa-solid fa-arrow-left"></i>
+            返回
+        </a>
         <h1 class="game-title">句读知不知</h1>
         <p class="subtitle">课本上的每一篇新文章都是一个很好的练习断句的机会</p>
     </div>
@@ -310,7 +337,7 @@
         <div class="sentence-content" id="sentenceContainer"></div>
     </div>
 
-    <button class="submit-button" id="submitButton">提交批改</button>
+    <button class="submit-button" id="submitButton">提交答案</button>
 
     <div class="legend">
         <div class="legend-item">

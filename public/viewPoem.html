@@ -104,7 +104,7 @@
         }
 
         .translation-toggle:hover {
-            background: #8a1a1f;
+            background: var(--primary-color-hover);
         }
 
         .poem-content {
@@ -170,7 +170,7 @@
                 // 设置作者链接
                 document.getElementById('poemMeta').innerHTML = `
                     【${poem.dynasty}】<a href="/author/${encodeURIComponent(poem.author)}" 
-                     style="color: var(--primary-color);text-decoration: none;">
+                     style="color: var(--primary-color-hover);text-decoration: none;">
                      ${poem.author}</a>
                 `;
 

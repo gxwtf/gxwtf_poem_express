@@ -112,7 +112,7 @@
         }
 
         .back-button:hover {
-            background: #8a1a1f;
+            background: var(--primary-color-hover);
             transform: translateX(-3px);
         }
 
@@ -158,7 +158,7 @@
                 const author = await authorRes.json();
 
                 // 设置页面信息
-                document.title = `${author.name} - 诗人详情`;
+                document.title = `${author.name}`;
                 document.getElementById('authorName').textContent = author.name;
                 document.getElementById('authorImage').src = author.image;
                 document.getElementById('authorIntro').textContent = author.intro;
