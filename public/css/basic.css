@@ -39,3 +39,9 @@ body {
     font-size: 24px;
     transition: transform 0.3s;
 }
+
+@media (max-width: 768px) {
+    body {
+        padding: 20px 10px;
+    }
+}

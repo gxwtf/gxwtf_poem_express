@@ -15,13 +15,14 @@
             --wrong: #e74c3c;
             --missing: #f1c40f;
             --text: #34495e;
-            --meta: #95a5a6;
-            --subtitle: #7f8c8d;
+            --meta: #6c757d;
+            --subtitle: #6c757d;
         }
 
         .header {
             background: white;
             padding: 40px 20px;
+            margin-top: 20px;
             margin-bottom: 30px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
             position: relative;
@@ -48,7 +49,7 @@
         }
 
         .subtitle {
-            color: #7f8c8d;
+            color: var(--subtitle);
             font-size: 1.2rem;
             text-align: center;
             margin: 20px auto;
@@ -57,49 +58,33 @@
             letter-spacing: 0.5px;
         }
 
+        .poem-name {
+            font-size: 1.4rem;
+            color: var(--primary);
+            text-align: center;
+            margin: 15px 0;
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+
         .poem-meta {
             margin-top: 25px;
             font-size: 1.1rem;
-            color: #95a5a6;
+            color: var(--meta);
             text-align: center;
+            margin-bottom: 20px;
         }
 
         .poem-meta a {
-            color: #2980b9;
+            color: var(--primary-color);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             padding-bottom: 2px;
-            border-bottom: 1px solid transparent;
+            text-decoration: none;
+
         }
 
         .poem-meta a:hover {
-            color: #e74c3c;
-            border-bottom-color: currentColor;
-        }
-
-        /* 作者链接样式 */
-        .author-link {
-            color: var(--primary);
-            position: relative;
-            transition: color 0.3s;
-        }
-
-        .author-link::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            width: 0;
-            height: 1px;
-            background: currentColor;
-            transition: width 0.3s;
-        }
-
-        .author-link:hover {
-            color: #1a252f;
-        }
-
-        .author-link:hover::after {
-            width: 100%;
+            text-decoration: none;
         }
 
         /* 统计颜色 */
@@ -123,6 +108,7 @@
             position: relative;
             margin-bottom: 30px;
             margin-top: 20px;
+            cursor: pointer;
         }
 
         .sentence-content {
@@ -144,7 +130,7 @@
             display: inline-block;
             width: 20px;
             height: 32px;
-            margin: 0 -2px;
+            margin: 0 0px;
             position: relative;
             cursor: pointer;
             vertical-align: middle;
@@ -155,7 +141,7 @@
             content: '/';
             position: absolute;
             left: 80%;
-            top: 50%;
+            top: 55%;
             transform: translate(-50%, -50%);
             font-size: 2rem;
             font-weight: 700;
@@ -303,26 +289,8 @@
 
         /* 响应式设计 */
         @media (max-width: 768px) {
-            body {
-                padding: 20px 10px;
-            }
-
             .game-title {
                 font-size: 2rem;
-            }
-
-            .sentence-content {
-                font-size: 1.3rem;
-                line-height: 2;
-            }
-
-            .sentence-gap {
-                width: 20px;
-                height: 32px;
-            }
-
-            .sentence-gap::after {
-                font-size: 1.6rem;
             }
         }
     </style>
@@ -334,10 +302,11 @@
     <div class="header">
         <h1 class="game-title">句读知不知</h1>
         <p class="subtitle">课本上的每一篇新文章都是一个很好的练习断句的机会</p>
-        <div class="poem-meta" id="poemMeta"></div>
     </div>
 
     <div class="sentence-container">
+        <div class="poem-name" id="poem-name"></div>
+        <div class="poem-meta" id="poemMeta"></div>
         <div class="sentence-content" id="sentenceContainer"></div>
     </div>
 
@@ -372,7 +341,7 @@
                 const data = await res.json();
 
                 document.title = `「${data.title}」句读练习`;
-
+                document.getElementById('poem-name').textContent = data.title;
                 document.getElementById('poemMeta').innerHTML = `
                     【${data.dynasty}】<a href="/author/${encodeURIComponent(data.author)}" 
                     class="author-link">${data.author}</a>
