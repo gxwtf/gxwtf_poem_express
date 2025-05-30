@@ -33,25 +33,38 @@ function parseFile(filePath) {
         const displayLine = lines[3];
         const display = displayLine.startsWith('display:') ? displayLine.slice(8).trim() : undefined;
 
+        // 找到正文、翻译、拼音的分割点
         const poemStartIndex = lines.indexOf('', 4) + 1;
         const emptyLineIndex = lines.indexOf('', poemStartIndex);
 
         const poemLines = lines.slice(poemStartIndex, emptyLineIndex).filter(line => line);
-        const transLines = lines.slice(emptyLineIndex + 1).filter(line => line);
+        const transStartIndex = emptyLineIndex + 1;
+        // 查找翻译和拼音之间的空行
+        let pinyinStartIndex = lines.length;
+        for (let i = transStartIndex; i < lines.length; i++) {
+            if (lines[i] === '') {
+                pinyinStartIndex = i + 1;
+                break;
+            }
+        }
+        const transLines = lines.slice(transStartIndex, pinyinStartIndex - 1).filter(line => line);
+        const pinyinLines = lines.slice(pinyinStartIndex).filter(line => line);
 
         // 解析每行的 display 信息
         const parsedContent = poemLines.map((line, index) => {
             const match = line.match(/^(.*?):(.*)$/); // 检查是否有 display 前缀
+            let displayVal, lineVal;
             if (match) {
-                return {
-                    display: match[1].trim(),
-                    line: convertToFullWidth(match[2].trim().replace(/"/g, '\\"')),
-                    trans: convertToFullWidth((transLines[index] || '').replace(/"/g, '\\"'))
-                };
+                displayVal = match[1].trim();
+                lineVal = match[2].trim();
+            } else {
+                lineVal = line;
             }
             return {
-                line: convertToFullWidth(line.replace(/"/g, '\\"')),
-                trans: convertToFullWidth((transLines[index] || '').replace(/"/g, '\\"'))
+                ...(displayVal ? { display: displayVal } : {}),
+                line: convertToFullWidth(lineVal.replace(/"/g, '\\"')),
+                trans: convertToFullWidth((transLines[index] || '').replace(/"/g, '\\"')),
+                pinyin: pinyinLines[index] ? pinyinLines[index] : ''
             };
         });
 

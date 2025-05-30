@@ -76,7 +76,7 @@
             font-size: 24px;
         }
 
-        .translation-toggle {
+        .toggle {
             background: var(--primary-color);
             color: white;
             border: none;
@@ -87,7 +87,7 @@
             transition: background 0.3s;
         }
 
-        .translation-toggle:hover {
+        .toggle:hover {
             background: var(--primary-color-hover);
         }
 
@@ -107,6 +107,29 @@
         }
 
         .show-translation .translated-line {
+            display: block;
+        }
+
+        .controls-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        /* 拼音显示样式 */
+        .pinyin-line {
+            display: none;
+            color: #8a1a1f;
+            font-size: 0.8em;
+            text-align: center;
+            line-height: 1.6;
+            letter-spacing: 1.7px;
+            margin-bottom: 4px;
+            opacity: 0.85;
+        }
+
+        .show-pinyin .pinyin-line {
             display: block;
         }
 
@@ -130,6 +153,16 @@
             .poem-meta {
                 font-size: 18px;
             }
+
+            .controls-container {
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .pinyin-line {
+                letter-spacing: 1.3px;
+            }
         }
     </style>
     <script src="/js/navbar.js"></script>
@@ -152,7 +185,17 @@
             <div class="poem-tags" id="poemTags"></div>
         </div>
 
-        <button class="translation-toggle" onclick="toggleTranslation()">显示翻译</button>
+        <div class="controls-container">
+            <button class="toggle" onclick="toggleTranslation()">
+                <i class="fa-solid fa-language"></i>
+                <span id="translationText">显示翻译</span>
+            </button>
+            <button class="toggle" onclick="togglePinyin()">
+                <i class="fa-solid fa-icons"></i>
+                <span id="pinyinText">显示拼音</span>
+            </button>
+        </div>
+
         <div class="poem-content" id="poemContent"></div>
     </div>
 
