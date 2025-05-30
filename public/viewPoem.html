@@ -226,13 +226,21 @@
                      ${poem.author}</a>
                 `;
 
-                // 生成内容
-                const contentHTML = poem.content.map(c => `
-                    <div class="line-container ${c.display || poem.display ? 'text-' + (c.display || poem.display) : ''}">
-                        <div class="original-line">${c.line}</div>
-                        <div class="translated-line">${c.trans}</div>
-                    </div>
-                `).join('');
+                // 生成内容，分别生成带拼音和不带拼音的 html
+                const contentHTML = poem.content.map(c => {
+                    const displayClass = c.display || poem.display ? 'text-' + (c.display || poem.display) : '';
+                    const noPinyinHTML = generateNoPinyinHTML(c.line);
+                    const withPinyinHTML = generateRubyHTML(c.line, c.pinyin);
+                    return `
+                        <div class="line-container ${displayClass}">
+                            <div class="original-line ${displayClass}">
+                                <span class="no-pinyin">${noPinyinHTML}</span>
+                                <span class="with-pinyin" style="display:none;">${withPinyinHTML}</span>
+                            </div>
+                            <div class="translated-line">${c.trans}</div>
+                        </div>
+                    `;
+                }).join('');
 
                 document.getElementById('poemContent').innerHTML = contentHTML;
             } catch (error) {
@@ -241,15 +249,67 @@
             }
         }
 
+        // 只输出原文，不加拼音
+        function generateNoPinyinHTML(line) {
+            return line;
+        }
+
+        // 拼音用ruby，标点不加拼音，拼音字符串以空格分隔
+        function generateRubyHTML(line, pinyinStr) {
+            if (!pinyinStr) return line;
+            const pinyinArr = pinyinStr.split(' ');
+            let html = '';
+            let pinyinIdx = 0;
+            for (let i = 0; i < line.length; i++) {
+                const char = line[i];
+                if (/[\u4e00-\u9fa5]/.test(char)) {
+                    const py = pinyinArr[pinyinIdx] || '';
+                    html += `<ruby>${char}<rt>${py}</rt></ruby>`;
+                    pinyinIdx++;
+                } else {
+                    html += char;
+                }
+            }
+            return html;
+        }
+
         function toggleTranslation() {
             const container = document.getElementById('poemContent');
-            const button = document.querySelector('.translation-toggle');
+            const button = document.querySelector('.toggle[onclick="toggleTranslation()"]');
             container.classList.toggle('show-translation');
-
-            button.textContent = container.classList.contains('show-translation')
+            button.querySelector('span').textContent = container.classList.contains('show-translation')
                 ? '隐藏翻译'
                 : '显示翻译';
         }
+
+        function togglePinyin() {
+            const container = document.getElementById('poemContent');
+            const button = document.querySelector('.toggle[onclick="togglePinyin()"]');
+            const isShow = container.classList.toggle('show-pinyin');
+            button.querySelector('span').textContent = isShow
+                ? '隐藏拼音'
+                : '显示拼音';
+
+            // 切换所有行的拼音显示
+            document.querySelectorAll('.original-line').forEach(line => {
+                const noPinyin = line.querySelector('.no-pinyin');
+                const withPinyin = line.querySelector('.with-pinyin');
+                if (isShow) {
+                    noPinyin.style.display = 'none';
+                    withPinyin.style.display = '';
+                } else {
+                    noPinyin.style.display = '';
+                    withPinyin.style.display = 'none';
+                }
+            });
+        }
+
+        // 默认隐藏拼音
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('poemContent').classList.remove('show-pinyin');
+            const pinyinBtn = document.querySelector('.toggle[onclick="togglePinyin()"]');
+            if (pinyinBtn) pinyinBtn.querySelector('span').textContent = '显示拼音';
+        });
 
         loadPoem();
     </script>
