@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="/css/basic.css">
     <style>
         .poem-container {
-            position: relative;
             margin: 20px auto;
             background: #fff;
             padding: 40px;
@@ -129,6 +128,59 @@
             display: block;
         }
 
+        .section-title {
+            font-size: 20px;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 8px;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+
+        .paragraph {
+            font-size: 1.08em;
+            color: #444;
+            line-height: 2;
+            margin-bottom: 0;
+            margin-top: 0;
+            padding: 0;
+            text-align: left;
+            word-break: break-all;
+            text-indent: 2em;
+        }
+
+        .poem-card {
+            padding: 8px 18px;
+            border-radius: 6px;
+            background: #fff;
+            border: 1px solid #eee;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: var(--primary-color);
+            font-size: 15px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+
+        .poem-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            background: #f8f9fa;
+        }
+
+        .poem-tags-area {
+            margin: 30px 0 0 0;
+            text-align: left;
+        }
+
+        .poem-tags-list {
+            margin-bottom: 10px;
+        }
+
         @media (max-width: 768px) {
             body {
                 padding: 20px 10px;
@@ -178,7 +230,6 @@
         <div class="poem-header">
             <h1 class="poem-title" id="poemTitle"></h1>
             <div class="poem-meta" id="poemMeta"></div>
-            <div class="poem-tags" id="poemTags"></div>
         </div>
 
         <div class="controls-container">
@@ -193,6 +244,17 @@
         </div>
 
         <div class="poem-content" id="poemContent"></div>
+        <div class="poem-tags-area">
+            <div class="poem-tags-list" id="poemTags"></div>
+        </div>
+        <div style="margin-top:30px;">
+            <div class="section-title" style="margin-bottom:12px;">写作背景</div>
+            <div id="poemBackground" class="paragraph"></div>
+        </div>
+        <div style="margin-top:30px;">
+            <div class="section-title" style="margin-bottom:12px;">内容赏析</div>
+            <div id="poemAnalysis" class="paragraph"></div>
+        </div>
     </div>
 
     <div id="footer-container"></div>
@@ -209,9 +271,9 @@
                 document.title = poem.title;
                 document.getElementById('poemTitle').textContent = poem.title;
 
-                // 添加标签展示
+                // 添加标签展示（用poem-card样式）
                 const tagsHTML = poem.tags?.map(tag =>
-                    `<span class="poem-tag">${tag}</span>`
+                    `<span class="poem-card">${tag}</span>`
                 ).join('') || '';
                 document.getElementById('poemTags').innerHTML = tagsHTML;
 
@@ -239,6 +301,16 @@
                 }).join('');
 
                 document.getElementById('poemContent').innerHTML = contentHTML;
+
+                // 写作背景（如有），支持多段落，\n分割
+                const bg = poem.background || '暂无写作背景信息。';
+                const bgParagraphs = bg.split('\n').map(p => `<p class="paragraph">${p}</p>`).join('');
+                document.getElementById('poemBackground').innerHTML = bgParagraphs;
+
+                // 内容赏析（如有），支持多段落，\n分割
+                const analysis = poem.analysis || '暂无内容赏析。';
+                const analysisParagraphs = analysis.split('\n').map(p => `<p class="paragraph">${p}</p>`).join('');
+                document.getElementById('poemAnalysis').innerHTML = analysisParagraphs;
             } catch (error) {
                 document.body.innerHTML = '<h1>加载失败</h1>';
                 console.error(error);

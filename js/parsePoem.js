@@ -68,7 +68,36 @@ function parseFile(filePath) {
             };
         });
 
-        return { title, dynasty, author, tags, display, content: parsedContent };
+        // 解析写作背景（background）和内容赏析（analysis）
+        let background = '';
+        let analysis = '';
+        if (pinyinStartIndex < lines.length) {
+            // 跳过拼音内容
+            let bgStart = pinyinStartIndex;
+            while (bgStart < lines.length && lines[bgStart] !== '') bgStart++;
+            // 跳过拼音后的空行
+            while (bgStart < lines.length && lines[bgStart] === '') bgStart++;
+            // 背景内容为 bgStart 及其后所有非空行，直到遇到空行为止
+            let bgLines = [];
+            let i = bgStart;
+            for (; i < lines.length; i++) {
+                if (lines[i] === '') break;
+                bgLines.push(lines[i].replace(/"/g, '\\"'));
+            }
+            background = bgLines.join('\n');
+            // 跳过背景后的空行
+            while (i < lines.length && lines[i] === '') i++;
+            // 内容赏析内容为 i 及其后所有非空行
+            let analysisLines = [];
+            for (; i < lines.length; i++) {
+                if (lines[i] !== '') {
+                    analysisLines.push(lines[i].replace(/"/g, '\\"'));
+                }
+            }
+            analysis = analysisLines.join('\n');
+        }
+
+        return { title, dynasty, author, tags, display, content: parsedContent, background, analysis };
     } catch (err) {
         console.error(`解析文件失败: ${filePath}\n错误信息: ${err.message}`);
         // 抛出一个带文件路径信息的错误，供上层捕获

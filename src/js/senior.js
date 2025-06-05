@@ -61,7 +61,9 @@ const poems = [
                 "trans": "",
                 "pinyin": ""
             }
-        ]
+        ],
+        "background": "",
+        "analysis": ""
     },
     {
         "title": "短歌行",
@@ -152,7 +154,9 @@ const poems = [
                 "trans": "",
                 "pinyin": ""
             }
-        ]
+        ],
+        "background": "",
+        "analysis": ""
     },
     {
         "title": "归园田居·其一",
@@ -213,7 +217,9 @@ const poems = [
                 "trans": "",
                 "pinyin": ""
             }
-        ]
+        ],
+        "background": "",
+        "analysis": ""
     },
     {
         "title": "梦游天姥吟留别",
@@ -339,7 +345,9 @@ const poems = [
                 "trans": "",
                 "pinyin": ""
             }
-        ]
+        ],
+        "background": "",
+        "analysis": ""
     },
     {
         "title": "登高",
@@ -370,7 +378,9 @@ const poems = [
                 "trans": "",
                 "pinyin": ""
             }
-        ]
+        ],
+        "background": "",
+        "analysis": ""
     },
     {
         "title": "琵琶行并序",
@@ -607,7 +617,9 @@ const poems = [
                 "trans": "",
                 "pinyin": ""
             }
-        ]
+        ],
+        "background": "",
+        "analysis": ""
     },
     {
         "title": "念奴娇·赤壁怀古",
@@ -628,7 +640,9 @@ const poems = [
                 "trans": "",
                 "pinyin": ""
             }
-        ]
+        ],
+        "background": "",
+        "analysis": ""
     },
     {
         "title": "永遇乐·京口北固亭怀古",
@@ -650,7 +664,9 @@ const poems = [
                 "trans": "",
                 "pinyin": ""
             }
-        ]
+        ],
+        "background": "",
+        "analysis": ""
     },
     {
         "title": "声声慢",
@@ -672,7 +688,9 @@ const poems = [
                 "trans": "",
                 "pinyin": ""
             }
-        ]
+        ],
+        "background": "",
+        "analysis": ""
     },
     {
         "title": "劝学",
@@ -704,7 +722,9 @@ const poems = [
                 "trans": "",
                 "pinyin": ""
             }
-        ]
+        ],
+        "background": "",
+        "analysis": ""
     },
     {
         "title": "师说",
@@ -736,7 +756,9 @@ const poems = [
                 "trans": "",
                 "pinyin": ""
             }
-        ]
+        ],
+        "background": "",
+        "analysis": ""
     },
     {
         "title": "赤壁赋",
@@ -773,7 +795,9 @@ const poems = [
                 "trans": "",
                 "pinyin": ""
             }
-        ]
+        ],
+        "background": "",
+        "analysis": ""
     },
     {
         "title": "登泰山记",
@@ -815,7 +839,9 @@ const poems = [
                 "trans": "",
                 "pinyin": ""
             }
-        ]
+        ],
+        "background": "",
+        "analysis": ""
     },
     {
         "title": "静女",
@@ -856,7 +882,9 @@ const poems = [
                 "trans": "",
                 "pinyin": ""
             }
-        ]
+        ],
+        "background": "",
+        "analysis": ""
     },
     {
         "title": "涉江采芙蓉",
@@ -887,7 +915,9 @@ const poems = [
                 "trans": "",
                 "pinyin": ""
             }
-        ]
+        ],
+        "background": "",
+        "analysis": ""
     },
     {
         "title": "虞美人·春花秋月何时了",
@@ -908,7 +938,9 @@ const poems = [
                 "trans": "",
                 "pinyin": ""
             }
-        ]
+        ],
+        "background": "",
+        "analysis": ""
     },
     {
         "title": "鹊桥仙·纤云弄巧",
@@ -929,7 +961,9 @@ const poems = [
                 "trans": "",
                 "pinyin": ""
             }
-        ]
+        ],
+        "background": "",
+        "analysis": ""
     },
     {
         "title": "子路、曾皙、冉有、公西华侍坐",
@@ -1046,7 +1080,9 @@ const poems = [
                 "trans": "",
                 "pinyin": ""
             }
-        ]
+        ],
+        "background": "",
+        "analysis": ""
     },
     {
         "title": "谏逐客书",
@@ -1078,7 +1114,9 @@ const poems = [
                 "trans": "",
                 "pinyin": ""
             }
-        ]
+        ],
+        "background": "",
+        "analysis": ""
     },
     {
         "title": "谏太宗十思疏",
@@ -1105,7 +1143,9 @@ const poems = [
                 "trans": "",
                 "pinyin": ""
             }
-        ]
+        ],
+        "background": "",
+        "analysis": ""
     },
     {
         "title": "答司马谏议书",
@@ -1113,7 +1153,8 @@ const poems = [
         "author": "王安石",
         "tags": [
             "必修下",
-            "文言文"
+            "文言文",
+            "背默"
         ],
         "display": "left",
         "content": [
@@ -1137,7 +1178,9 @@ const poems = [
                 "trans": "",
                 "pinyin": ""
             }
-        ]
+        ],
+        "background": "",
+        "analysis": ""
     },
     {
         "title": "阿房宫赋",
@@ -1169,7 +1212,9 @@ const poems = [
                 "trans": "",
                 "pinyin": ""
             }
-        ]
+        ],
+        "background": "",
+        "analysis": ""
     },
     {
         "title": "六国论",
@@ -1177,7 +1222,8 @@ const poems = [
         "author": "苏洵",
         "tags": [
             "必修下",
-            "文言文"
+            "文言文",
+            "背默"
         ],
         "display": "left",
         "content": [
@@ -1206,7 +1252,9 @@ const poems = [
                 "trans": "六国和秦国都是诸侯之国，他们的势力比秦国弱，却还有可以不贿赂秦国而战胜它的优势。如果凭借偌大国家，却追随六国灭亡的前例，这就比不上六国了。",
                 "pinyin": "fū liù guó yǔ qín jiē zhū hóu qí shì ruò yú qín ér yóu yǒu kě yǐ bú lù ér shèng zhī zhī shì gǒu yǐ tiān xià zhī dà xià ér cóng liù guó pò wáng zhī gù shì shì yòu zài liù guó xià yǐ"
             }
-        ]
+        ],
+        "background": "北宋政治上的专制腐败、军事上的骄惰无能，带来外交上的极端软弱。其每年要向辽和西夏上贡大量银两以及商品。这样贿赂的结果，助长了辽、西夏的气焰，加重了人民的负担，极大地损伤了国力，带来了无穷的祸患。也就是说当时的北宋四周环伺，政策上求和，积贫积弱，而苏洵正是针对这样的现实撰写《六国论》的。",
+        "analysis": "《六国论》是苏洵政论文的代表作品。这篇文章提出并论证了六国灭亡“弊在赂秦”的精辟论点，以六国灭亡的原因来抨击宋王朝对辽和西夏的屈辱政策，告诫北宋统治者要吸取六国灭亡的历史教训，以免重蹈覆辙。此文借古讽今，切中时弊，表明作者明达而深湛的政治见解及其忧国情怀；文中运用对偶、对比、比喻、引用、设问等修辞方式，使之语言生动，气势沛然；其论点鲜明，论证严密，堪称古代论说文的典范。"
     },
     {
         "title": "登岳阳楼",
@@ -1237,7 +1285,9 @@ const poems = [
                 "trans": "",
                 "pinyin": ""
             }
-        ]
+        ],
+        "background": "",
+        "analysis": ""
     },
     {
         "title": "桂枝香·金陵怀古",
@@ -1259,7 +1309,9 @@ const poems = [
                 "trans": "",
                 "pinyin": ""
             }
-        ]
+        ],
+        "background": "",
+        "analysis": ""
     },
     {
         "title": "念奴娇·过洞庭",
@@ -1281,7 +1333,9 @@ const poems = [
                 "trans": "",
                 "pinyin": ""
             }
-        ]
+        ],
+        "background": "",
+        "analysis": ""
     },
     {
         "title": "游园",
@@ -1298,7 +1352,9 @@ const poems = [
                 "trans": "",
                 "pinyin": ""
             }
-        ]
+        ],
+        "background": "",
+        "analysis": ""
     },
     {
         "title": "《论语》十二章",
@@ -1370,7 +1426,9 @@ const poems = [
                 "trans": "",
                 "pinyin": ""
             }
-        ]
+        ],
+        "background": "",
+        "analysis": ""
     },
     {
         "title": "大学之道",
@@ -1392,7 +1450,9 @@ const poems = [
                 "trans": "",
                 "pinyin": ""
             }
-        ]
+        ],
+        "background": "",
+        "analysis": ""
     },
     {
         "title": "《老子》四章",
@@ -1424,7 +1484,9 @@ const poems = [
                 "trans": "",
                 "pinyin": ""
             }
-        ]
+        ],
+        "background": "",
+        "analysis": ""
     },
     {
         "title": "无衣",
@@ -1450,7 +1512,9 @@ const poems = [
                 "trans": "",
                 "pinyin": ""
             }
-        ]
+        ],
+        "background": "",
+        "analysis": ""
     },
     {
         "title": "春江花月夜",
@@ -1551,7 +1615,9 @@ const poems = [
                 "trans": "",
                 "pinyin": ""
             }
-        ]
+        ],
+        "background": "",
+        "analysis": ""
     },
     {
         "title": "将进酒",
@@ -1622,7 +1688,9 @@ const poems = [
                 "trans": "",
                 "pinyin": ""
             }
-        ]
+        ],
+        "background": "",
+        "analysis": ""
     },
     {
         "title": "江城子·乙卯正月二十日夜记梦",
@@ -1644,7 +1712,9 @@ const poems = [
                 "trans": "",
                 "pinyin": ""
             }
-        ]
+        ],
+        "background": "",
+        "analysis": ""
     },
     {
         "title": "屈原列传",
@@ -1661,7 +1731,9 @@ const poems = [
                 "trans": "",
                 "pinyin": ""
             }
-        ]
+        ],
+        "background": "",
+        "analysis": ""
     },
     {
         "title": "过秦论",
@@ -1698,7 +1770,9 @@ const poems = [
                 "trans": "",
                 "pinyin": ""
             }
-        ]
+        ],
+        "background": "",
+        "analysis": ""
     },
     {
         "title": "五代史伶官传序",
@@ -1730,7 +1804,9 @@ const poems = [
                 "trans": "",
                 "pinyin": ""
             }
-        ]
+        ],
+        "background": "",
+        "analysis": ""
     },
     {
         "title": "燕歌行并序",
@@ -1817,7 +1893,9 @@ const poems = [
                 "trans": "",
                 "pinyin": ""
             }
-        ]
+        ],
+        "background": "",
+        "analysis": ""
     },
     {
         "title": "李凭箜篌引",
@@ -1863,7 +1941,9 @@ const poems = [
                 "trans": "",
                 "pinyin": ""
             }
-        ]
+        ],
+        "background": "",
+        "analysis": ""
     },
     {
         "title": "锦瑟",
@@ -1894,7 +1974,9 @@ const poems = [
                 "trans": "",
                 "pinyin": ""
             }
-        ]
+        ],
+        "background": "",
+        "analysis": ""
     },
     {
         "title": "书愤",
@@ -1925,7 +2007,9 @@ const poems = [
                 "trans": "",
                 "pinyin": ""
             }
-        ]
+        ],
+        "background": "",
+        "analysis": ""
     },
     {
         "title": "离骚",
@@ -1957,7 +2041,9 @@ const poems = [
                 "trans": "",
                 "pinyin": ""
             }
-        ]
+        ],
+        "background": "",
+        "analysis": ""
     },
     {
         "title": "蜀道难",
@@ -1983,7 +2069,9 @@ const poems = [
                 "trans": "",
                 "pinyin": ""
             }
-        ]
+        ],
+        "background": "",
+        "analysis": ""
     },
     {
         "title": "蜀相",
@@ -2014,7 +2102,9 @@ const poems = [
                 "trans": "",
                 "pinyin": ""
             }
-        ]
+        ],
+        "background": "",
+        "analysis": ""
     },
     {
         "title": "望海潮",
@@ -2036,7 +2126,9 @@ const poems = [
                 "trans": "",
                 "pinyin": ""
             }
-        ]
+        ],
+        "background": "",
+        "analysis": ""
     },
     {
         "title": "扬州慢",
@@ -2063,7 +2155,9 @@ const poems = [
                 "trans": "",
                 "pinyin": ""
             }
-        ]
+        ],
+        "background": "",
+        "analysis": ""
     },
     {
         "title": "陈情表",
@@ -2095,7 +2189,9 @@ const poems = [
                 "trans": "",
                 "pinyin": ""
             }
-        ]
+        ],
+        "background": "",
+        "analysis": ""
     },
     {
         "title": "项脊轩志",
@@ -2132,7 +2228,9 @@ const poems = [
                 "trans": "",
                 "pinyin": ""
             }
-        ]
+        ],
+        "background": "",
+        "analysis": ""
     },
     {
         "title": "兰亭集序",
@@ -2164,7 +2262,9 @@ const poems = [
                 "trans": "",
                 "pinyin": ""
             }
-        ]
+        ],
+        "background": "",
+        "analysis": ""
     },
     {
         "title": "归去来兮辞并序",
@@ -2201,7 +2301,9 @@ const poems = [
                 "trans": "",
                 "pinyin": ""
             }
-        ]
+        ],
+        "background": "",
+        "analysis": ""
     },
     {
         "title": "种树郭橐驼传",
@@ -2238,7 +2340,9 @@ const poems = [
                 "trans": "",
                 "pinyin": ""
             }
-        ]
+        ],
+        "background": "",
+        "analysis": ""
     },
     {
         "title": "拟行路难（其四）",
@@ -2269,7 +2373,9 @@ const poems = [
                 "trans": "",
                 "pinyin": ""
             }
-        ]
+        ],
+        "background": "",
+        "analysis": ""
     },
     {
         "title": "客至",
@@ -2300,7 +2406,9 @@ const poems = [
                 "trans": "",
                 "pinyin": ""
             }
-        ]
+        ],
+        "background": "",
+        "analysis": ""
     },
     {
         "title": "登快阁",
@@ -2331,7 +2439,9 @@ const poems = [
                 "trans": "",
                 "pinyin": ""
             }
-        ]
+        ],
+        "background": "",
+        "analysis": ""
     },
     {
         "title": "临安春雨初霁",
@@ -2362,7 +2472,9 @@ const poems = [
                 "trans": "",
                 "pinyin": ""
             }
-        ]
+        ],
+        "background": "",
+        "analysis": ""
     },
     {
         "title": "报任安书",
@@ -2384,7 +2496,9 @@ const poems = [
                 "trans": "",
                 "pinyin": ""
             }
-        ]
+        ],
+        "background": "",
+        "analysis": ""
     }
 ];
 export default poems;

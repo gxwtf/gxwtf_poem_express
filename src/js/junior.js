@@ -62,7 +62,9 @@ const poems = [
                 "trans": "可曾记得，那时我们在江水深急的地方游泳，那激起的浪花几乎挡住了疾驰而来的船？",
                 "pinyin": ""
             }
-        ]
+        ],
+        "background": "",
+        "analysis": ""
     }
 ];
 export default poems;
