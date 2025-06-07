@@ -6,16 +6,13 @@ display:center
 八月秋高风怒号，卷我屋上三重茅。
 茅飞渡江洒江郊，高者挂罥长林梢。
 下者飘转沉塘坳。
-
 南村群童欺我老无力，忍能对面为盗贼。
 公然抱茅入竹去，唇焦口燥呼不得。
 归来倚杖自叹息。
-
 俄顷风定云墨色，秋天漠漠向昏黑。
 布衾多年冷似铁，娇儿恶卧踏里裂。
 床头屋漏无干处，雨脚如麻未断绝。
 自经丧乱少睡眠，长夜沾湿何由彻！
-
 安得广厦千万间，大庇天下寒士俱欢颜！
 风雨不动安如山。
 呜呼！何时眼前突兀见此屋？
@@ -24,16 +21,13 @@ display:center
 八月深秋狂风怒号，卷走我屋上三重茅草。
 茅草飞过江去散落江边，高的挂在大树梢头。
 低的飘转沉入池塘洼地。
-
 南村孩童欺负我年老无力，忍心当面做盗贼。
 公然抱着茅草跑进竹林，我喊得唇焦口燥也无用。
 回家拄着拐杖独自叹息。
-
 不久风停乌云如墨，秋季天空阴沉渐黑。
 布被盖了多年冷似铁板，孩子睡相不好蹬破被里。
 床头屋顶漏雨没有干处，雨点如麻不停下落。
 自从战乱就很少睡眠，长夜漫漫湿冷如何挨到天亮！
-
 如何能得到千万间宽敞房屋，庇护天下贫寒读书人欢颜！
 风雨吹打也安稳如山。
 唉！什么时候眼前出现这样高耸的房屋？
@@ -42,16 +36,13 @@ display:center
 bā yuè qiū gāo fēng nù háo juǎn wǒ wū shàng sān chóng máo
 máo fēi dù jiāng sǎ jiāng jiāo gāo zhě guà juàn cháng lín shāo
 xià zhě piāo zhuǎn chén táng ào
-
 nán cūn qún tóng qī wǒ lǎo wú lì rěn néng duì miàn wéi dào zéi
 gōng rán bào máo rù zhú qù chún jiāo kǒu zào hū bù dé
 guī lái yǐ zhàng zì tàn xī
-
 é qǐng fēng dìng yún mò sè qiū tiān mò mò xiàng hūn hēi
 bù qīn duō nián lěng sì tiě jiāo ér è wò tà lǐ liè
 chuáng tóu wū lòu wú gān chù yǔ jiǎo rú má wèi duàn jué
 zì jīng sāng luàn shǎo shuì mián cháng yè zhān shī hé yóu chè
-
 ān dé guǎng shà qiān wàn jiān dà bì tiān xià hán shì jù huān yán
 fēng yǔ bù dòng ān rú shān
 wū hū hé shí yǎn qián tū wù jiàn cǐ wū
