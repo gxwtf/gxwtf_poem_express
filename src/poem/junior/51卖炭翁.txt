@@ -9,7 +9,6 @@ display:center
 可怜身上衣正单，心忧炭贱愿天寒。
 夜来城外一尺雪，晓驾炭车辗冰辙。
 牛困人饥日已高，市南门外泥中歇。
-
 翩翩两骑来是谁？黄衣使者白衫儿。
 手把文书口称敕，回车叱牛牵向北。
 一车炭，千余斤，宫使驱将惜不得。
@@ -21,7 +20,6 @@ display:center
 可怜他身上只穿着单薄的衣服，却担心炭价便宜希望天气更寒冷。
 夜里城外下了一尺厚的大雪，清晨驾着炭车轧着冰冻的车辙赶路。
 牛累了人饿了太阳已升得很高，就在集市南门外的泥泞中歇息。
-
 轻快前行的两个骑马人是谁？是穿黄衣的太监和穿白衫的差役。
 手里拿着公文口称皇帝命令，拉转车头吆喝着牛朝皇宫拉去。
 一车炭，一千多斤，宫使强行拉走老翁舍不得也没用。
@@ -33,7 +31,6 @@ mài tàn dé qián hé suǒ yíng shēn shàng yī shang kǒu zhōng shí
 kě lián shēn shàng yī zhèng dān xīn yōu tàn jiàn yuàn tiān hán
 yè lái chéng wài yī chǐ xuě xiǎo jià tàn chē niǎn bīng zhé
 niú kùn rén jī rì yǐ gāo shì nán mén wài ní zhōng xiē
-
 piān piān liǎng qí lái shì shuí huáng yī shǐ zhě bái shān ér
 shǒu bà wén shū kǒu chēng chì huí chē chì niú qiān xiàng běi
 yī chē tàn qiān yú jīn gōng shǐ qū jiāng xī bù dé

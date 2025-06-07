@@ -5,26 +5,9 @@ const ds = require('./deepseek');
 const path = require('path');
 const fs = require('fs');
 
-let list = `鱼我所欲也
-唐雎不辱使命
-送东阳马生序(宋濂)
-渔家傲·秋思(范仲淹)
-江城子·密州出猎(苏轼)
-破阵子(辛弃疾)
-满江红·小住京华(秋瑾)
-曹刿论战(左丘明)
-邹忌讽齐王纳谏
-陈涉世家(司马迁)
-出师表(诸葛亮)
-十五从军征
-白雪歌送武判官归京(岑参)
-南乡子(辛弃疾)
-过零丁洋(文天祥)
-山坡羊·潼关怀古(张养浩)`
-
 const prompt = `
 现在假设你是一名语文老师，正在给学生备课。
-我现在准备了一些古诗文，我会告诉你这些古诗文的名字。你需要对这些古诗文生成翻译、拼音、解析等内容，并按照某种格式输出。
+我现在准备了一些古诗文，请帮忙检查这些古诗文的格式是否正确，包括标点符号、拼音、翻译等。
 
 格式示例如下：
 
@@ -61,13 +44,15 @@ xìng shèn zhì zāi gē yǐ yǒng zhì
 
 《观沧海》是一首四言乐府诗，是诗人在碣石山登山望海时，用饱蘸浪漫主义激情的大笔，所勾勒出大海吞吐日月、包蕴万千的壮丽景象，摹写出祖国河山的雄伟壮丽。全诗语言质朴，想象丰富；气势磅礴，苍凉悲壮。吐露出诗人建功立业、施展抱负的雄心壮志；表现了他一揽天下、豪迈自信的胸怀；抒发了积极进取、胸怀天下的思想感情。
 
-其中最后两段为”写作背景“ 和 ”内容赏析“。请严格按照上述格式输出，不能有任何多余的换行。
+其中最后两段为”写作背景“ 和 ”内容赏析“。你不需要检查这两部分的内容是否准确、详细，只需要检查格式（比如是否有乱码）就可以了。
 
-作为一名语文老师，你应该保证生成的内容准确无误，尽可能详细。
+必须严格按照上述格式生成，不能有任何多余的换行/注释/解释说明等。
 
-请以纯 TXT 格式输出，不要输出别的内容。
+请注意：
 
 原文要与翻译、拼音一一对应。也就是说，每一行原文对应的翻译必须在同一行内，每一行原文对应的拼音也必须在同一行内。且两行原文的翻译、拼音必须放到两行，不能放到同一行内（这样才能一一对应）。
+
+原文中不能有两个连续的换行，翻译、拼音中也是如此。
 
 请注意合理断句，每一个子句占用一行。
 
@@ -77,17 +62,27 @@ xìng shèn zhì zāi gē yǐ yǒng zhì
 
 **不要在 txt 文本中出现任何多余内容，比如”@ref“这样的东西。**
 
-准备好了吗？现在我们开始吧！
+我每次会给你提供一个文件，你需要检查该文件是否复合上述 **所有** 要求。如果符合，请输出 "1"（不含引号，且不要输出任何多余内容），否则：
+
+- 第一行输出一个 "0"（不含引号），表示该文件不符合要求。
+- 接下来输出一行，表示错误信息（比如乱码、标点符号错误、拼音错误等）。**请将报错信息压到一行内。**
+- 接下来输出修改后的文件。（包括写作背景和内容赏析）
+
+准备好了吗？我们即将开始！
 `;
 
 (async function(){
-    list = list.split('\n');
-    for (let i = 0;i <= list.length - 1;i ++){
-        console.log(list[i]);
-        let response = await ds(list[i], prompt);
+    const files = fs.readdirSync(path.join(__dirname, '../src/poem/junior'));
+    // for (let i = 0;i <= files.length - 1;i ++){
+        // const file = files[i];
+        const file = '51卖炭翁.txt'
+        const filePath = path.join(__dirname, `../src/poem/junior/${file}`);
+        const content = fs.readFileSync(filePath, 'utf8');
+        console.log(content);
+        let response = await ds(content, prompt);
         let txt = response.choices[0].message.content;
         // let txt = 'XC';
         console.log(txt);
-        fs.writeFileSync(path.join(__dirname, `../src/poem/junior/${i + 60}.txt`), txt);
-    }
+        // fs.writeFileSync(filePath, txt);
+    // }
 })();
