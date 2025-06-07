@@ -2501,4 +2501,4 @@ const poems = [
         "analysis": ""
     }
 ];
-export default poems;
+exports.default = poems;

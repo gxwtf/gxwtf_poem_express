@@ -20,6 +20,8 @@ function convertToFullWidth(text) {
 
 // 解析单个文件
 function parseFile(filePath) {
+    if (filePath.endsWith('.txt') === false)
+        throw new Error(`文件名 "${filePath}" 不是以 .txt 结尾`);
     try {
         const content = fs.readFileSync(filePath, 'utf-8');
         const lines = content.split('\n').map(line => line.trim());
@@ -147,7 +149,7 @@ async function parsePoem() {
  * ${subDir} 合集
  */
 const poems = ${JSON.stringify(poems, null, 4)};
-export default poems;
+exports.default = poems;
     `.trim();
 
         const destPath = path.join(destDir, `${subDir}.js`);
@@ -163,7 +165,7 @@ export default poems;
  * 所有诗词合集
  */
 const allPoems = ${JSON.stringify(allPoems, null, 4)};
-export default allPoems;
+exports.default = allPoems;
     `.trim();
 
     const allDestPath = path.join(destDir, 'all.js');
