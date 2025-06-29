@@ -1,13 +1,6 @@
 const express = require('express');
 const path = require('path');
 const { parsePoem } = require('./js/parsePoem');
-const PoemRoutes = require('./js/poem'); // 引入 poem.js 路由
-const authorRoutes = require('./js/author'); // 引入 author.js 路由
-const breakSentenceRoutes = require('./js/breakSentence'); // 引入 breakSentence.js 路由
-const allPoems = require('./src/js/all').default; // 加载所有古诗文数据
-
-const app = express();
-const PORT = 1234;
 
 // 检测是否传入 --parsePoem 参数
 const args = process.argv.slice(2);
@@ -15,6 +8,14 @@ const args = process.argv.slice(2);
 if (args.includes('--parsePoem')) {
     parsePoem();
 }
+
+const PoemRoutes = require('./js/poem'); // 引入 poem.js 路由
+const authorRoutes = require('./js/author'); // 引入 author.js 路由
+const breakSentenceRoutes = require('./js/breakSentence'); // 引入 breakSentence.js 路由
+const allPoems = require('./src/js/all').default; // 加载所有古诗文数据
+
+const app = express();
+const PORT = 1234;
 
 // 设置 public 目录为静态文件根目录，支持省略 .html 后缀
 const publicDir = path.join(__dirname, 'public');
